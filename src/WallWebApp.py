@@ -1,10 +1,8 @@
 __author__ = 'Jesse'
 
-import os
-import string
 import socket
 from wsgiref.simple_server import make_server
-from pprint import pformat
+import dbInterface
 
 port = 9000
 ip = socket.gethostbyname(socket.gethostname())
