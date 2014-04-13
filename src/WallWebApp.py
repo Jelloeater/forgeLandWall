@@ -21,6 +21,7 @@ def webHandler(environ, start_response):
 	#create a simple form:
 	output.append('<form method="post">')
 	output.append('<input type="text" name="inputBox">')
+	output.append('<input type="text" name="inputBox2">')
 	output.append('<input type="submit">')
 	output.append('</form>')
 
