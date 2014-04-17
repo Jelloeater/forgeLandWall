@@ -22,8 +22,6 @@ class webHandler:
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
 
-		if self.environ['REQUEST_METHOD'] == 'POST':
-			self.POST()
 
 		if path == "/":
 			return self.GET_index()
@@ -67,9 +65,10 @@ class webHandler:
 		output_len = sum(len(line) for line in output)
 
 		status = '200 OK'
-		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len)]
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-		yield output
+
+		yield ''.join(output)
 
 
 
