@@ -2,7 +2,6 @@ __author__ = 'Jesse'
 
 import socket
 from wsgiref.simple_server import make_server
-import dbInterface
 
 port = 9000
 ip = socket.gethostbyname(socket.gethostname())
@@ -12,7 +11,6 @@ def main():
 	print("Serving on: " + str(ip) + ":" + str(port))
 	httpd = make_server(ip, port, webHandler)
 	httpd.serve_forever()
-
 
 class webHandler:
 	def __init__(self, environ, start_response):
@@ -25,6 +23,8 @@ class webHandler:
 
 		if path == "/":
 			return self.GET_index()
+		if path == "/hi":
+			return self.GET_hi()
 		else:
 			return self.notfound()
 
@@ -65,6 +65,20 @@ class webHandler:
 		output_len = sum(len(line) for line in output)
 
 		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+
+		yield ''.join(output)
+
+	def GET_hi(self):
+		output = ['']
+
+		#create a simple form:
+		output.append('hi')
+
+		output_len = sum(len(line) for line in output)
+
+		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 
@@ -79,36 +93,5 @@ class webHandler:
 		yield "Not Found\n"
 
 
-def webHandlerOLD(environ, start_response):
-	# Sets up HTML environment
-	output = ['<pre>']
-
-	#create a simple form:
-	output.append('<form method="post">')
-	output.append('<input type="text" name="inputBox">')
-	output.append('<input type="text" name="inputBox2">')
-	output.append('<input type="submit">')
-	output.append('</form>')
-
-	if environ['REQUEST_METHOD'] == 'POST':
-		try:
-			request_body_size = int(environ.get('CONTENT_LENGTH', 0))
-		except ValueError:
-			request_body_size = 0
-
-		request_body = environ['wsgi.input'].read(request_body_size)
-
-		# show form data as received by POST:
-		output.append('<h1>FORM DATA</h1>')
-		output.append(request_body)
-		print(request_body)
-
-
-
-	output_len = sum(len(line) for line in output)
-	start_response('200 OK', [('Content-type', 'text/html'),
-	                          ('Content-Length', str(output_len))])
-	return output
-
-
-main()
+if __name__ == "__main__": # Runs Script
+	main()
