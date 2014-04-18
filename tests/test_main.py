@@ -1,12 +1,16 @@
 from unittest import TestCase
 from forgeLandWall import WallWebApp
 import urllib2
+import os
+import subprocess
 __author__ = 'Jesse'
 
 
 class TestMain(TestCase):
 	def setUp(self):
-		pass
+		os.chdir("..") ## Goto project root
+		os.chdir("forgeLandWall")
+		subprocess.Popen(["python", "WallWebApp.py"]) ## Runs server in the background
 
 	def test_main(self):
 		url = "http://"+str(WallWebApp.ip)+":"+str(WallWebApp.port)+"/"
