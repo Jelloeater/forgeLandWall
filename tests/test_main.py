@@ -2,15 +2,21 @@ from unittest import TestCase
 from forgeLandWall import WallWebApp
 import urllib2
 import os
-import subprocess
+from subprocess import Popen
+import time
 __author__ = 'Jesse'
 
 
 class TestMain(TestCase):
+
 	def setUp(self):
-		os.chdir("..") ## Goto project root
+		os.chdir("..")  # Go-to project root
 		os.chdir("forgeLandWall")
-		subprocess.Popen(["python", "WallWebApp.py"]) ## Runs server in the background
+		Popen(["python", "WallWebApp.py"])  # Runs server in the background
+		time.sleep(.25)  # Gives server time to start
+
+	def tearDown(self):
+		pass
 
 	def test_main(self):
 		url = "http://"+str(WallWebApp.ip)+":"+str(WallWebApp.port)+"/"
@@ -22,6 +28,3 @@ class TestMain(TestCase):
 		flag = website_html.__contains__("<pre>")
 
 		TestCase.assertEqual(self, flag, True, "Invalid Server Response")
-
-if __name__ == '__main__':
-	TestMain.setUp()
