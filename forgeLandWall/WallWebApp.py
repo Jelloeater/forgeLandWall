@@ -1,16 +1,19 @@
 __author__ = 'Jesse'
 
-import socket
 from wsgiref.simple_server import make_server
 
+import networkInfo
+
+
 port = 9000
-ip = socket.gethostbyname(socket.gethostname())
+ip = networkInfo.get_lan_ip()
 
 
 def main():
-	print("Serving on: " + str(ip) + ":" + str(port))
+	print("Serving on: http://" + str(ip) + ":" + str(port))
 	httpd = make_server(ip, port, webHandler)
 	httpd.serve_forever()
+
 
 class webHandler:
 	def __init__(self, environ, start_response):
