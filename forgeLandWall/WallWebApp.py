@@ -4,9 +4,22 @@ from wsgiref.simple_server import make_server
 
 import networkInfo
 
+import argparse
+argParseHandle = argparse.ArgumentParser()
+argParseHandle.add_argument("-d", help="enables debug mode", action="store_true")
+args = argParseHandle.parse_args()
+if args.d:
+	debugMode = True
+else:
+	debugMode = False
 
 port = 9000
-ip = networkInfo.get_lan_ip()
+
+if debugMode:
+	ip = networkInfo.getIpSocket()
+	print("DEBUG MODE ENABLED")
+else:
+	ip = networkInfo.get_lan_ip()
 
 
 def main():
@@ -23,22 +36,35 @@ class webHandler:
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
 
-
 		if path == "/":
 			return self.GET_index()
+		if path == "/post":
+			return self.rawPostInput()
 		if path == "/hi":
 			return self.GET_hi()
 		else:
 			return self.notfound()
 
 
-	def POST(self):
+	def rawPostInput(self):
+		output = ['']
 		try:
 			request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
 		except ValueError:
 			request_body_size = 0
 
 		request_body = self.environ['wsgi.input'].read(request_body_size)
+		print(request_body)
+
+		output_len = sum(len(line) for line in output)
+
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		output.append("True")
+
+		# TODO Add query output?
+		yield ''.join(output)
 
 
 	def GET_index(self):
@@ -46,11 +72,14 @@ class webHandler:
 
 		#create a simple form:
 		output.append('<form method="post">')
-		output.append('<input type="text" name="inputBox">')
-		output.append('<input type="text" name="inputBox2">')
+		output.append('<input type="radio" name="command" value = "create">')
+		output.append('<input type="radio" name="command" value = "update">')
+		output.append('<input type="radio" name="command" value = "delete">')
+		output.append('<input type="text" name="input">')
 		output.append('<input type="submit">')
 		output.append('</form>')
 
+		# command=create&input=someTextHere
 
 		if self.environ['REQUEST_METHOD'] == 'POST':
 			try:
@@ -68,7 +97,7 @@ class webHandler:
 		output_len = sum(len(line) for line in output)
 
 		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 
 		yield ''.join(output)
@@ -88,7 +117,6 @@ class webHandler:
 		yield ''.join(output)
 
 
-
 	def notfound(self):
 		status = '404 Not Found'
 		response_headers = [('Content-type', 'text/plain')]
@@ -96,5 +124,5 @@ class webHandler:
 		yield "Not Found\n"
 
 
-if __name__ == "__main__": # Runs Script
+if __name__ == "__main__":  # Runs Script
 	main()

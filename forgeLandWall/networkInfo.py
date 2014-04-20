@@ -29,8 +29,11 @@ def get_lan_ip():
 		for interfaceName in interfaces:
 			try:
 				ip = __get_interface_ip(interfaceName)
-				if not ip.startswith("10."):  # Rejects specific ip addresses
-					break
+				# if not ip.startswith("10."):  # Rejects specific ip addresses?
+				break
 			except IOError:
 				pass
 	return ip
+
+def getIpSocket():
+	return socket.gethostbyname(socket.gethostname())
