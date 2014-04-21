@@ -1,6 +1,26 @@
 __author__ = 'Jesse'
 
 import sqlite3
+import os
+
+dbPath = "WallWebApp.db"
+
+
+def setupDB():
+	if not os.path.isfile(dbPath):
+		print("Database Missing")
+		dbConnection = sqlite3.connect(dbPath)
+		dbcursor = dbConnection.cursor()
+
+		dbcursor.execute('CREATE TABLE "messages" (\
+			"message"  ,\
+			"timestamp"  ,\
+			"index"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL\
+		);')
+
+		dbConnection.commit()
+		dbConnection.close()
+		print ("Database generated")
 
 
 def run():
@@ -28,4 +48,3 @@ def insertName():
 def printList():
 	retString = 'select * from testtable where name="Jesse"'
 	return retString
-

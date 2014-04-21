@@ -1,4 +1,4 @@
-from forgeLandWall.views import rawPostInput, GET_index, GET_hi, notfound
+from forgeLandWall import dbInterface
 
 __author__ = 'Jesse'
 
@@ -23,6 +23,8 @@ if debugMode:
 	print("DEBUG MODE ENABLED")
 else:
 	ip = networkInfo.get_lan_ip()
+
+dbInterface.setupDB()
 
 
 def main():
