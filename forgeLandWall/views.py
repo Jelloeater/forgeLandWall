@@ -21,6 +21,13 @@ def rawPostInput(self):
 	# TODO Add query output?
 	yield ''.join(output)
 
+def rawOutput(self):
+	# Select all to db
+	# Convert to JSON
+	# Return as string
+	pass
+
+
 
 def GET_index(self):
 	output = ['<pre>']

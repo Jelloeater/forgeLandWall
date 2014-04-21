@@ -5,6 +5,7 @@ __author__ = 'Jesse'
 from wsgiref.simple_server import make_server
 
 import networkInfo
+import  views
 
 import argparse
 argParseHandle = argparse.ArgumentParser()
@@ -39,13 +40,13 @@ class webHandler:
 		path = self.environ['PATH_INFO']
 
 		if path == "/":
-			return GET_index(self)
+			return views.GET_index(self)
 		if path == "/post":
-			return rawPostInput(self)
+			return views.rawPostInput(self)
 		if path == "/hi":
-			return GET_hi(self)
+			return views.GET_hi(self)
 		else:
-			return notfound(self)
+			return views.notfound(self)
 
 
 if __name__ == "__main__":  # Runs Script
