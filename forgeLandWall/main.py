@@ -29,20 +29,21 @@ def main():
 	isDebugMode()
 	ip = preBoot()
 	port = 9000
-	dbInterface.setupDB()
+	dbInterface.dbHelper.setupDB()
 
 	import models
 
 	dbObj = models.messageModel()
-	dbObj.message = "Fuck yo couch"
-	dbObj.saveRecord()
+	dbObj.message("Fuck yo couch")
 
 	dbObj2 = models.messageModel(10)
-	dbObj2.message = "newMessage"
-	dbObj2.saveRecord()
+	dbObj2.message("newMessage")
 
 	dbObj3 = models.messageModel(3)
 	dbObj3.deleteRecord()
+
+	dbObj4 = models.messageModel(5)
+	print(dbObj4.message())
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))

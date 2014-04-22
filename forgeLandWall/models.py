@@ -1,45 +1,56 @@
+import datetime
+
 __author__ = 'Jesse'
 
 from dbInterface import dbHelper
 # from main import isDebugMode
 import sqlite3
 
+# Yes, I know we're all adults here, but I don't like getting suggestions for methods I don't need
+
 
 class messageModel(dbHelper):  # CREATE
 	def __init__(self, index=None):
 		dbHelper.__init__(self)
 
-		self.message = None
-		self.timestamp = None
+		self.__messageTxt = None
+		self.__timestamp = None
 
 		if index is None:
-			self.index = None
+			self.__index = None
 		else:
-			self.index = index
-			self.lookupRecord()
+			self.__index = index
+			self.__lookupRecord()
 			print("Record Found")
 
-	def dbConnect(self):
+	def message(self, message=None):
+		if message is None:
+			return self.__messageTxt
+		else:
+			self.__messageTxt = message
+			self.__saveRecord()
+
+	def __dbConnect(self):
 		print("Connection Opened")
-		dbConn = sqlite3.connect(self.dbPath)
+		dbConn = sqlite3.connect(self._dbPath)
 		dbcursor = dbConn.cursor()
 		return dbConn, dbcursor
 
 	@staticmethod
-	def dbClose(dbConn):
+	def __dbClose(dbConn):
 		print("Connection Closed")
 		dbConn.commit()
 		dbConn.close()
 
-	def lookupRecord(self):  # READ
-		dbConn, dbcursor = self.dbConnect()
-		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.index) + '"'
+	def __lookupRecord(self):  # READ
+		dbConn, dbcursor = self.__dbConnect()
+		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.__index) + '"'
 
 		try:
 			dbcursor.execute(sqlStr)
 			record = dbcursor.fetchone()
-			self.message = record[0]
-			self.timestamp = record[1]
+			self.__messageTxt = record[0]
+			self.__timestamp = record[1]
 			print("Looked up record")
 			return record
 		except TypeError:
@@ -47,24 +58,28 @@ class messageModel(dbHelper):  # CREATE
 
 		dbConn.close()
 
-	def saveRecord(self):  # UPDATE
-		if self.index is None:
-			dbConn, dbcursor = self.dbConnect()
+	def __saveRecord(self):  # UPDATE
+		if self.__index is None:
+			dbConn, dbcursor = self.__dbConnect()
 			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES' + \
-			         '("' + self.message + '","' + str(dbHelper.getTimeStamp()) + '");'
+			         '("' + self.__messageTxt + '","' + str(self.__getTimeStamp()) + '");'
 
 			dbcursor.execute(sqlStr)
-			self.dbClose(dbConn)
+			self.__dbClose(dbConn)
 		else:
-			dbConn, dbcursor = self.dbConnect()
-			sqlStr = 'UPDATE messages SET message = "' + self.message + '", "timestamp" = "' + str(
-				dbHelper.getTimeStamp()) + '"  WHERE "index" = "' + str(self.index) + '";'
+			dbConn, dbcursor = self.__dbConnect()
+			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + str(
+				self.__getTimeStamp()) + '"  WHERE "index" = "' + str(self.__index) + '";'
 			# TODO Add try and catch to SQL code
 			dbcursor.execute(sqlStr)
-			self.dbClose(dbConn)
+			self.__dbClose(dbConn)
 
 	def deleteRecord(self):  # DELETE
-		dbConn, dbcursor = self.dbConnect()
-		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.index) + '";'
+		dbConn, dbcursor = self.__dbConnect()
+		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
-		self.dbClose(dbConn)
+		self.__dbClose(dbConn)
+
+	@staticmethod
+	def __getTimeStamp():
+		return datetime.datetime.now().replace(microsecond=0)
