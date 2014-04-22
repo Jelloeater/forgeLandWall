@@ -5,7 +5,7 @@ __author__ = 'Jesse'
 from wsgiref.simple_server import make_server
 
 import networkInfo
-import  views
+import views
 
 import argparse
 argParseHandle = argparse.ArgumentParser()
@@ -24,10 +24,9 @@ if debugMode:
 else:
 	ip = networkInfo.get_lan_ip()
 
-dbInterface.setupDB()
-
 
 def main():
+	dbInterface.setupDB()
 	print("Serving on: http://" + str(ip) + ":" + str(port))
 	httpd = make_server(ip, port, webHandler)
 	httpd.serve_forever()

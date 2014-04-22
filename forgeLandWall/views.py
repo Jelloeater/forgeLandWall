@@ -1,5 +1,7 @@
 __author__ = 'Jesse'
 
+import messageModel
+
 
 def rawPostInput(self):
 	output = ['']
@@ -67,11 +69,12 @@ def GET_index(self):
 
 def GET_hi(self):
 	output = ['']
-
-	#create a simple form:
 	output.append('hi')
 
 	output_len = sum(len(line) for line in output)
+
+	o = messageModel.messageModel(message="Hi Cat")
+	o.commit()
 
 	status = '200 OK'
 	response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
