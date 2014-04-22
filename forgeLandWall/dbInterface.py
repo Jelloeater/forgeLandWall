@@ -2,12 +2,13 @@ __author__ = 'Jesse'
 
 import sqlite3
 import os
+import datetime
 
 
 def setupDB():
-	if not os.path.isfile(dbInterface.dbPath):
+	if not os.path.isfile(dbHelper.dbPath):
 		print("Database Missing")
-		dbConnection = sqlite3.connect(dbInterface.dbPath)
+		dbConnection = sqlite3.connect(dbHelper.dbPath)
 		dbcursor = dbConnection.cursor()
 
 		dbcursor.execute('CREATE TABLE "messages" (\
@@ -21,16 +22,16 @@ def setupDB():
 		print ("Database generated")
 
 
-class dbInterface():
+class dbHelper():
 	def __init__(self):
 		pass
 
-	dbPath = "WallWebApp.db"
+	dbPath = "main.db"
 	# Should this be a module variable or a class variable?
 
 	@staticmethod
 	def getLastIndex():
-		dbConnection = sqlite3.connect(dbInterface.dbPath)
+		dbConnection = sqlite3.connect(dbHelper.dbPath)
 		dbcursor = dbConnection.cursor()
 		dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT 1')
 		lastIndex = dbcursor.fetchone()
@@ -39,3 +40,7 @@ class dbInterface():
 			return 1
 		else:
 			return lastIndex[0]
+
+	@staticmethod
+	def getTimeStamp():
+		return datetime.datetime.now().replace(microsecond=0)
