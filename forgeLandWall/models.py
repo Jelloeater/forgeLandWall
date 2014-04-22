@@ -5,9 +5,12 @@ from dbInterface import dbHelper
 import sqlite3
 
 
-class messageModel(dbHelper):
+class messageModel(dbHelper):  # CREATE
 	def __init__(self, index=None):
 		dbHelper.__init__(self)
+
+		self.message = None
+		self.timestamp = None
 
 		if index is None:
 			self.index = None
@@ -16,9 +19,20 @@ class messageModel(dbHelper):
 			self.lookupRecord()
 			print("Record Found")
 
-	def lookupRecord(self):
+	def dbConnect(self):
+		print("Connection Opened")
 		dbConn = sqlite3.connect(self.dbPath)
 		dbcursor = dbConn.cursor()
+		return dbConn, dbcursor
+
+	@staticmethod
+	def dbClose(dbConn):
+		print("Connection Closed")
+		dbConn.commit()
+		dbConn.close()
+
+	def lookupRecord(self):  # READ
+		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.index) + '"'
 
 		try:
@@ -33,30 +47,24 @@ class messageModel(dbHelper):
 
 		dbConn.close()
 
-	def saveRecord(self):
+	def saveRecord(self):  # UPDATE
 		if self.index is None:
-			dbConn = sqlite3.connect(self.dbPath)
-			dbcursor = dbConn.cursor()
+			dbConn, dbcursor = self.dbConnect()
 			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES' + \
 			         '("' + self.message + '","' + str(dbHelper.getTimeStamp()) + '");'
 
 			dbcursor.execute(sqlStr)
-			dbConn.commit()
-			dbConn.close()
+			self.dbClose(dbConn)
 		else:
-			dbConn = sqlite3.connect(self.dbPath)
-			dbcursor = dbConn.cursor()
+			dbConn, dbcursor = self.dbConnect()
 			sqlStr = 'UPDATE messages SET message = "' + self.message + '", "timestamp" = "' + str(
 				dbHelper.getTimeStamp()) + '"  WHERE "index" = "' + str(self.index) + '";'
 			# TODO Add try and catch to SQL code
 			dbcursor.execute(sqlStr)
-			dbConn.commit()
-			dbConn.close()
+			self.dbClose(dbConn)
 
-	def deleteRecord(self):
-		dbConn = sqlite3.connect(self.dbPath)
-		dbcursor = dbConn.cursor()
+	def deleteRecord(self):  # DELETE
+		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.index) + '";'
 		dbcursor.execute(sqlStr)
-		dbConn.commit()
-		dbConn.close()
+		self.dbClose(dbConn)

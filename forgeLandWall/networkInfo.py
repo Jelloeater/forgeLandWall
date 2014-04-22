@@ -35,5 +35,6 @@ def get_lan_ip():
 				pass
 	return ip
 
+
 def getIpSocket():
 	return socket.gethostbyname(socket.gethostname())
