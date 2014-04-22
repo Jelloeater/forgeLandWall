@@ -1,35 +1,45 @@
 __author__ = 'Jesse'
 
 from dbInterface import dbHelper
-from main import isDebugMode
+# from main import isDebugMode
 
 
 class messageModel(dbHelper):
-	def __init__(self, index=None, message=None):
+	def __init__(self, index=None):
 		dbHelper.__init__(self)
 
 		if index is None:
-			self.index = self.getLastIndex()
-			# We don't actually change the index, we just get it, I might be wrong
-			self.message = message
-			self.timestamp = self.getTimeStamp()
-			print (isDebugMode())
-			if isDebugMode(): print("Created new message object")
+			# if isDebugMode(): print("Created new message object")
+			self.index = None
+			pass
 		else:
-			self.index = index
-			self.message = None  # Read message
+			self.index = index  # Read index from database where index is index
+			# SQL select * from messages where index = self.index, fill in info with index
+			self.message = None  # Read message from database where index is index
 			self.timestamp = None  # Read timestamp
-			if isDebugMode(): print("Loaded Object")
+		# if isDebugMode(): print("Loaded Object")
 
 	def commit(self):
 		import sqlite3
 
-		dbConn = sqlite3.connect(self.dbPath)
-		dbcursor = dbConn.cursor()
-		sqlStr = 'INSERT INTO messages (message, "timestamp", index) VALUES self.message, self.timestamp self.index'
-		dbcursor.execute(sqlStr)
-		dbConn.commit()
-		dbConn.close()
+		if self.index is None:
+			dbConn = sqlite3.connect(self.dbPath)
+			dbcursor = dbConn.cursor()
+
+			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES ("' + self.message + '", "' + str(
+				dbHelper.getTimeStamp()) + '");'
+			dbcursor.execute(sqlStr)
+			dbConn.commit()
+			dbConn.close()
+		else:
+			dbConn = sqlite3.connect(self.dbPath)
+			dbcursor = dbConn.cursor()
+			sqlStr = 'UPDATE messages set message = self.message ' \
+			         '"timestamp" = dbHelper.getTimeStamp() WHERE index = self.index;'
+			dbcursor.execute(sqlStr)
+			dbConn.commit()
+			dbConn.close()
+
 
 	# TODO Write lookup method, we don't need edit, we should be able to edit the object
 

@@ -1,7 +1,5 @@
 __author__ = 'Jesse'
 
-import models
-
 
 def rawPostInput(self):
 	output = ['']
@@ -64,8 +62,6 @@ def GET_index(self):
 	response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 	self.start(status, response_headers)
 
-	print()
-
 	yield ''.join(output)
 
 
@@ -74,9 +70,6 @@ def GET_hi(self):
 	output.append('hi')
 
 	output_len = sum(len(line) for line in output)
-
-	o = models.messageModel(message="Hi Cat")
-	o.commit()
 
 	status = '200 OK'
 	response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]

@@ -1,6 +1,5 @@
 __author__ = 'Jesse'
 
-from wsgiref.simple_server import make_server
 import argparse
 
 from forgeLandWall import dbInterface
@@ -31,9 +30,17 @@ def main():
 	ip = preBoot()
 	port = 9000
 	dbInterface.setupDB()
-	print("Serving on: http://" + str(ip) + ":" + str(port))
-	httpd = make_server(ip, port, webHandler)
-	httpd.serve_forever()
+
+	import models
+
+	dbObj = models.messageModel()
+	dbObj.message = "Fuck you couch"
+	dbObj.commit()
+
+
+# print("Serving on: http://" + str(ip) + ":" + str(port))
+# httpd = make_server(ip, port, webHandler)
+# httpd.serve_forever()
 
 
 class webHandler:
