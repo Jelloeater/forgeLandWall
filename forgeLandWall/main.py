@@ -34,8 +34,15 @@ def main():
 	import models
 
 	dbObj = models.messageModel()
-	dbObj.message = "Fuck you couch"
-	dbObj.commit()
+	dbObj.message = "Fuck yo couch"
+	dbObj.saveRecord()
+
+	dbObj2 = models.messageModel(10)
+	dbObj2.message = "newMessage"
+	dbObj2.saveRecord()
+
+	dbObj3 = models.messageModel(3)
+	dbObj3.deleteRecord()
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))
