@@ -30,6 +30,42 @@ class messageModel(dbHelper):  # CREATE
 			self.__messageTxt = message
 			self.__saveRecord()
 
+	def getTimestamp(self):
+		return self.__timestamp
+
+	def search(self, searchStr):
+		print("Searching for: " + searchStr)
+		dbConn, dbcursor = self.__dbConnect(self)
+
+
+
+
+		# Search for message text & index
+		# Call lookup record with index
+
+		# SELECT * FROM Customers WHERE City LIKE 's%';
+		# % 	A substitute for zero or more characters
+
+		# _ 	A substitute for a single character
+
+		# [charlist] 	Sets and ranges of characters to match
+		# SELECT * FROM Customers WHERE City LIKE '[a-c]%'
+
+		# [^charlist]
+		# or
+		# [!charlist] 	Matches only a character NOT specified within the brackets
+
+
+
+		sqlStr = ''
+		dbcursor.execute(sqlStr)
+		record = dbcursor.fetchone()
+		self.__messageTxt = record[0]
+		self.__timestamp = record[1]
+
+		self.__dbClose(dbConn)
+
+	@staticmethod
 	def __dbConnect(self):
 		print("Connection Opened")
 		dbConn = sqlite3.connect(self._dbPath)
@@ -43,7 +79,7 @@ class messageModel(dbHelper):  # CREATE
 		dbConn.close()
 
 	def __lookupRecord(self):  # READ
-		dbConn, dbcursor = self.__dbConnect()
+		dbConn, dbcursor = self.__dbConnect(self)
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.__index) + '"'
 
 		try:
@@ -52,6 +88,7 @@ class messageModel(dbHelper):  # CREATE
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			print("Looked up record")
+			# FIXME Does not execute
 			return record
 		except TypeError:
 			print("Record does not exist")
@@ -60,14 +97,14 @@ class messageModel(dbHelper):  # CREATE
 
 	def __saveRecord(self):  # UPDATE
 		if self.__index is None:
-			dbConn, dbcursor = self.__dbConnect()
+			dbConn, dbcursor = self.__dbConnect(self)
 			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES' + \
 			         '("' + self.__messageTxt + '","' + str(self.__getTimeStamp()) + '");'
 
 			dbcursor.execute(sqlStr)
 			self.__dbClose(dbConn)
 		else:
-			dbConn, dbcursor = self.__dbConnect()
+			dbConn, dbcursor = self.__dbConnect(self)
 			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + str(
 				self.__getTimeStamp()) + '"  WHERE "index" = "' + str(self.__index) + '";'
 			# TODO Add try and catch to SQL code
@@ -75,7 +112,7 @@ class messageModel(dbHelper):  # CREATE
 			self.__dbClose(dbConn)
 
 	def deleteRecord(self):  # DELETE
-		dbConn, dbcursor = self.__dbConnect()
+		dbConn, dbcursor = self.__dbConnect(self)
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
 		self.__dbClose(dbConn)
