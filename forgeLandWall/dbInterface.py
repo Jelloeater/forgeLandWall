@@ -28,3 +28,21 @@ class dbHelper():
 			dbConnection.commit()
 			dbConnection.close()
 			print ("Database generated")
+
+	# TODO Write method to get X number of records from bottom?
+	@staticmethod
+	def getLastIndex():  # We will use this for getting an certain number of records
+		dbConnection = sqlite3.connect(dbHelper._dbPath)
+		dbcursor = dbConnection.cursor()
+		dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT 1')
+		lastIndex = dbcursor.fetchone()
+		dbConnection.close()
+		if lastIndex is None:  # If the column is empty
+			return 1
+		else:
+			return lastIndex[0]
+
+
+# TODO Use SQL select * to get everything, DON'T SPAM QUERYS! Let the program do the work!
+def getMessagesFromDB():
+	pass
