@@ -10,22 +10,28 @@ import sqlite3
 
 
 class messageModel(dbHelper):  # CREATE OR READ RECORD FROM DB
-	# FIXME Add message search call (__lookupRecordFromMessage) via non default variable ex 'message = "barf"'
-	def __init__(self, index=None):
+	"""Represents a SINGLE record from the table, we manipulate the objects, rather then SQL"""
+
+	def __init__(self, index=None, message=None):
 		dbHelper.__init__(self)
 
 		self.__messageTxt = None
 		self.__timestamp = None
 
-		if index is None:
+		if index is None and message is None:
 			self.__index = None
-		else:
+
+		if message is not None and index is None:
+			self.__lookupRecordFromMessage(message)
+		if index is not None and message is None:
 			# Index should still be used for edits and delete though
 			self.__index = index
 			self.__lookupRecordFromIndex()
 			print("Record Found")
+		# TODO Add check for record not found
 
-	def message(self, message=None):  # Gets message from object, or writes message to DB
+	def message(self, message=None):
+		"""Gets message from object, or writes message to DB"""
 		if message is None:
 			return self.__messageTxt
 		else:
@@ -51,36 +57,22 @@ class messageModel(dbHelper):  # CREATE OR READ RECORD FROM DB
 		dbConn.close()
 
 	def __lookupRecordFromMessage(self, searchStr):
+		"""Looks up ONLY the FIRST record that matches the search"""
 		print("Searching for: " + searchStr)
 		dbConn, dbcursor = self.__dbConnect(self)
-		# TODO Should __lookupRecordFromMessage for a SPECIFIC RECORD
 
-
-
-
-		# Search for message text & index
-		# Call lookup record with index
-
-		# SELECT * FROM Customers WHERE City LIKE 's%';
-		# % 	A substitute for zero or more characters
-
-		# _ 	A substitute for a single character
-
-		# [charlist] 	Sets and ranges of characters to match
-		# SELECT * FROM Customers WHERE City LIKE '[a-c]%'
-
-		# [^charlist]
-		# or
-		# [!charlist] 	Matches only a character NOT specified within the brackets
-
-
-
-		sqlStr = ''
-		dbcursor.execute(sqlStr)
-		record = dbcursor.fetchone()
-		self.__messageTxt = record[0]
-		self.__timestamp = record[1]
-
+		try:
+			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
+			dbcursor.execute(sqlStr)
+			record = dbcursor.fetchone()
+			self.__messageTxt = record[0]
+			self.__timestamp = record[1]
+			self.__index = record[2]
+		except TypeError:  # FIXME Add better exception, no Pokemon exceptions!
+			self.__messageTxt = "CANNOT FIND MESSAGE: " + searchStr
+			self.__timestamp = ""
+			self.__index = ""
+			print("Record Not Found")
 		self.__dbClose(dbConn)
 
 
@@ -95,14 +87,10 @@ class messageModel(dbHelper):  # CREATE OR READ RECORD FROM DB
 			self.__timestamp = record[1]
 			self.__index = record[2]
 			print("Looked up record")
-			# FIXME Does not execute
-			return record
 		except TypeError:
 			print("Record does not exist")
 
 		dbConn.close()
-
-	# TODO Move to dbInterface.dbHelper Class
 
 	def __saveRecord(self):  # UPDATE
 		if self.__index is None:

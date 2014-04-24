@@ -46,3 +46,9 @@ class dbHelper():
 # TODO Use SQL select * to get everything, DON'T SPAM QUERYS! Let the program do the work!
 def getMessagesFromDB():
 	pass
+
+
+def searchMessagesFromDB():
+	"""Searches the database and return a list of message objects"""
+	# TODO Write search function that returns a ... just see the docstring -_-
+	pass

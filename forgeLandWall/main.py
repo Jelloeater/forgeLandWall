@@ -34,16 +34,19 @@ def main():
 	import models
 
 	dbObj = models.messageModel()
-	dbObj.message("Fuck yo couch")
+	dbObj.message("cats")
 
-	dbObj2 = models.messageModel(10)
+	dbObj2 = models.messageModel(21)
 	dbObj2.message("newMessage")
 
-	dbObj3 = models.messageModel(3)
+	dbObj3 = models.messageModel(20)
 	dbObj3.deleteRecord()
 
-	dbObj4 = models.messageModel(5)
-	print(dbObj4.message())
+	dbObj4 = models.messageModel(message="fuck")
+	print(dbObj4.message() + " " + dbObj4.getTimestamp())
+
+	dbObj4 = models.messageModel(message="new")
+	print(dbObj4.message() + " " + dbObj4.getTimestamp())
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))
