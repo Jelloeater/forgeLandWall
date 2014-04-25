@@ -28,7 +28,7 @@ class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 			# Index should still be used for edits and delete though
 			self.__index = index
 			self.__lookupRecordFromIndex()
-			print("Record Found")
+			if globalVars._debugMode: print("Record Found")
 		# TODO Add check for record not found
 
 	def message(self, message=None):
@@ -60,7 +60,7 @@ class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 			self.__messageTxt = "CANNOT FIND MESSAGE: " + searchStr
 			self.__timestamp = ""
 			self.__index = ""
-			print("Record Not Found")
+			if globalVars._debugMode: print("Record Not Found")
 		dbConnection.dbClose(dbConn)
 
 
@@ -74,12 +74,12 @@ class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
-			print("Looked up record")
+			if globalVars._debugMode: print("Looked up record")
 		except TypeError:
 			self.__messageTxt = "CANNOT FIND MESSAGE @ INDEX" + str(self.__index)
 			self.__timestamp = ""
 			self.__index = ""
-			print("Record does not exist")
+			if globalVars._debugMode: print("Record does not exist")
 
 		dbConn.close()
 

@@ -1,5 +1,5 @@
 import dbSetup
-from forgeLandWall.settings import globalVars, isDebugMode
+from forgeLandWall.settings import isDebugMode
 
 __author__ = 'Jesse'
 
@@ -24,30 +24,28 @@ def main():
 	dbSetup.setupDB()
 
 	# TEST CODE
-	import models
 
 	# dbObj = models.messageModel()
 	# dbObj.message("cats")
 
-	dbObj2 = models.messageModel(21)
-	dbObj2.message("newMessage")
+	# dbObj2 = models.messageModel(21)
+	# dbObj2.message("newMessage")
+	#
+	# dbObj3 = models.messageModel(20)
+	# dbObj3.deleteRecord()
+	#
+	# dbObj4 = models.messageModel(message="fuck")
+	# print(dbObj4.message() + " " + dbObj4.getTimestamp())
+	#
+	# dbObj4 = models.messageModel(message="new")
+	# print(dbObj4.message() + " " + dbObj4.getTimestamp())
+	#
+	# msg = models.messageModel(30)
+	# print(msg.message() + msg.getTimestamp())
 
-	dbObj3 = models.messageModel(20)
-	dbObj3.deleteRecord()
 
-	dbObj4 = models.messageModel(message="fuck")
-	print(dbObj4.message() + " " + dbObj4.getTimestamp())
-
-	dbObj4 = models.messageModel(message="new")
-	print(dbObj4.message() + " " + dbObj4.getTimestamp())
-
-	msg = models.messageModel(30)
-	print(msg.message() + msg.getTimestamp())
-
-
-	dbInterface.getMessagesFromDB()  # BROKEN
-# FIXME Move db connection to db interface class, that way we can call dbInterface methods from main
-
+	print(dbInterface.getMessagesFromDBasJSONArray(13))
+	print(dbInterface.getMessagesFromDBasJSONObj(3))
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))
