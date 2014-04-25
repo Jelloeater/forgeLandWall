@@ -1,14 +1,16 @@
+from forgeLandWall.settings import globalVars
+
 __author__ = 'Jesse'
 
 import sqlite3
 
-import main
 import models
 
 
 def getBottomIndexes(numberOfBottomIndexesToGet=1):
 	"""Gets X number of index values from the bottom of the message table"""
-	dbConnection = sqlite3.connect(main.globalVars._dbPath)
+
+	dbConnection = sqlite3.connect(globalVars._dbPath)
 	dbcursor = dbConnection.cursor()
 
 	dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT ' + str(numberOfBottomIndexesToGet))

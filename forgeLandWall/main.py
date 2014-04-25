@@ -1,22 +1,14 @@
 import dbSetup
+from forgeLandWall.settings import globalVars, isDebugMode
 
 __author__ = 'Jesse'
-
-import argparse
 
 import networkInfo
 import views
 # import dbInterface
 # FIXME BROKEN
 
-def isDebugMode():
-	argParseHandle = argparse.ArgumentParser()
-	argParseHandle.add_argument("-d", help="enables debug mode", action="store_true")
-	args = argParseHandle.parse_args()
-	if args.d:
-		return True
-	else:
-		return False
+
 
 def preBoot():
 	if isDebugMode():
@@ -26,14 +18,7 @@ def preBoot():
 		return networkInfo.get_lan_ip()
 
 
-class globalVars():
-	def __init__(self):
-		pass
-	_debugMode = isDebugMode()
-	_dbPath = "main.db"
-
 def main():
-	globalVars.debugMode = isDebugMode()
 	ip = preBoot()
 	port = 9000
 	dbSetup.setupDB()

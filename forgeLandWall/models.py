@@ -1,18 +1,20 @@
 import datetime
 
-__author__ = 'Jesse'
+from forgeLandWall.dbConnection import dbConnect, dbClose
 
-import main
-import sqlite3
+from forgeLandWall.settings import globalVars
+
+
+__author__ = 'Jesse'
 
 # Yes, I know we're all adults here, but I don't like getting suggestions for methods I don't need
 
 
-class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
+class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 	"""Represents a SINGLE record from the table, we manipulate the objects, rather then SQL"""
 
 	def __init__(self, index=None, message=None):
-		main.globalVars.__init__(self)
+		globalVars.__init__(self)
 
 		self.__messageTxt = None
 		self.__timestamp = None
@@ -41,26 +43,10 @@ class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
 		return self.__timestamp
 
 
-	@staticmethod
-	def __dbConnect(self):
-		print("Connection Opened")
-		dbConn = sqlite3.connect(self._dbPath)
-		dbcursor = dbConn.cursor()
-		return dbConn, dbcursor
-
-	# TODO Move to dbInterface.dbHelper Class?
-
-	@staticmethod
-	def __dbClose(dbConn):
-		if main.globalVars._debugMode: print("Connection Closed")
-		dbConn.commit()
-		dbConn.close()
-
-
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""
 		print("Searching for: " + searchStr)
-		dbConn, dbcursor = self.__dbConnect(self)
+		dbConn, dbcursor = dbConnect()
 
 		try:
 			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
@@ -75,11 +61,11 @@ class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
 			self.__timestamp = ""
 			self.__index = ""
 			print("Record Not Found")
-		self.__dbClose(dbConn)
+		dbClose(dbConn)
 
 
 	def __lookupRecordFromIndex(self):  # READ
-		dbConn, dbcursor = self.__dbConnect(self)
+		dbConn, dbcursor = dbConnect()
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.__index) + '"'
 
 		try:
@@ -90,31 +76,34 @@ class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
 			self.__index = record[2]
 			print("Looked up record")
 		except TypeError:
+			self.__messageTxt = "CANNOT FIND MESSAGE @ INDEX" + str(self.__index)
+			self.__timestamp = ""
+			self.__index = ""
 			print("Record does not exist")
 
 		dbConn.close()
 
 	def __saveRecord(self):  # UPDATE
 		if self.__index is None:
-			dbConn, dbcursor = self.__dbConnect(self)
+			dbConn, dbcursor = dbConnect()
 			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES' + \
 			         '("' + self.__messageTxt + '","' + str(self.__getTimeStampFromSystem()) + '");'
 
 			dbcursor.execute(sqlStr)
-			self.__dbClose(dbConn)
+			dbClose(dbConn)
 		else:
-			dbConn, dbcursor = self.__dbConnect(self)
+			dbConn, dbcursor = dbConnect()
 			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + str(
 				self.__getTimeStampFromSystem()) + '"  WHERE "index" = "' + str(self.__index) + '";'
 			# TODO Add try and catch to SQL code
 			dbcursor.execute(sqlStr)
-			self.__dbClose(dbConn)
+			dbClose(dbConn)
 
 	def deleteRecord(self):  # DELETE
-		dbConn, dbcursor = self.__dbConnect(self)
+		dbConn, dbcursor = dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
-		self.__dbClose(dbConn)
+		dbClose(dbConn)
 
 	@staticmethod
 	def __getTimeStampFromSystem():
