@@ -1,7 +1,7 @@
 import datetime
 
-from forgeLandWall.dbConnection import dbConnect, dbClose
-
+# from forgeLandWall.dbConnection import dbConnect, dbClose
+import dbConnection
 from forgeLandWall.settings import globalVars
 
 
@@ -46,7 +46,7 @@ class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""
 		print("Searching for: " + searchStr)
-		dbConn, dbcursor = dbConnect()
+		dbConn, dbcursor = dbConnection.dbConnect()
 
 		try:
 			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
@@ -61,11 +61,11 @@ class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 			self.__timestamp = ""
 			self.__index = ""
 			print("Record Not Found")
-		dbClose(dbConn)
+		dbConnection.dbClose(dbConn)
 
 
 	def __lookupRecordFromIndex(self):  # READ
-		dbConn, dbcursor = dbConnect()
+		dbConn, dbcursor = dbConnection.dbConnect()
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.__index) + '"'
 
 		try:
@@ -85,25 +85,25 @@ class messageModel(globalVars):  # CREATE OR READ RECORD FROM DB
 
 	def __saveRecord(self):  # UPDATE
 		if self.__index is None:
-			dbConn, dbcursor = dbConnect()
+			dbConn, dbcursor = dbConnection.dbConnect()
 			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES' + \
 			         '("' + self.__messageTxt + '","' + str(self.__getTimeStampFromSystem()) + '");'
 
 			dbcursor.execute(sqlStr)
-			dbClose(dbConn)
+			dbConnection.dbClose(dbConn)
 		else:
-			dbConn, dbcursor = dbConnect()
+			dbConn, dbcursor = dbConnection.dbConnect()
 			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + str(
 				self.__getTimeStampFromSystem()) + '"  WHERE "index" = "' + str(self.__index) + '";'
 			# TODO Add try and catch to SQL code
 			dbcursor.execute(sqlStr)
-			dbClose(dbConn)
+			dbConnection.dbClose(dbConn)
 
 	def deleteRecord(self):  # DELETE
-		dbConn, dbcursor = dbConnect()
+		dbConn, dbcursor = dbConnection.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
-		dbClose(dbConn)
+		dbConnection.dbClose(dbConn)
 
 	@staticmethod
 	def __getTimeStampFromSystem():

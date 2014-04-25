@@ -5,7 +5,7 @@ __author__ = 'Jesse'
 
 import networkInfo
 import views
-# import dbInterface
+import dbInterface
 # FIXME BROKEN
 
 
@@ -45,7 +45,7 @@ def main():
 	print(msg.message() + msg.getTimestamp())
 
 
-# dbInterface.getMessagesFromDB()  # BROKEN
+	dbInterface.getMessagesFromDB()  # BROKEN
 # FIXME Move db connection to db interface class, that way we can call dbInterface methods from main
 
 
