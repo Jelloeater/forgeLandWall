@@ -2,18 +2,17 @@ import datetime
 
 __author__ = 'Jesse'
 
-from dbInterface import dbHelper
-# from main import isDebugMode
+import main
 import sqlite3
 
 # Yes, I know we're all adults here, but I don't like getting suggestions for methods I don't need
 
 
-class messageModel(dbHelper):  # CREATE OR READ RECORD FROM DB
+class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
 	"""Represents a SINGLE record from the table, we manipulate the objects, rather then SQL"""
 
 	def __init__(self, index=None, message=None):
-		dbHelper.__init__(self)
+		main.globalVars.__init__(self)
 
 		self.__messageTxt = None
 		self.__timestamp = None
@@ -39,6 +38,7 @@ class messageModel(dbHelper):  # CREATE OR READ RECORD FROM DB
 			self.__saveRecord()
 
 	def getTimestamp(self):
+		print(self._debugMode)
 		return self.__timestamp
 
 
@@ -68,7 +68,8 @@ class messageModel(dbHelper):  # CREATE OR READ RECORD FROM DB
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
-		except TypeError:  # FIXME Add better exception, no Pokemon exceptions!
+		except TypeError:
+			# FIXME Add better exception, no Pokemon exceptions!
 			self.__messageTxt = "CANNOT FIND MESSAGE: " + searchStr
 			self.__timestamp = ""
 			self.__index = ""

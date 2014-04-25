@@ -1,8 +1,10 @@
+import dbSetup
+
 __author__ = 'Jesse'
 
 import argparse
 
-from forgeLandWall import dbInterface
+import dbInterface
 import networkInfo
 import views
 
@@ -16,7 +18,6 @@ def isDebugMode():
 	else:
 		return False
 
-
 def preBoot():
 	if isDebugMode():
 		print("DEBUG MODE ENABLED")
@@ -25,16 +26,24 @@ def preBoot():
 		return networkInfo.get_lan_ip()
 
 
+class globalVars():
+	def __init__(self):
+		pass
+
+	_debugMode = isDebugMode()
+	_dbPath = "main.db"
+
+
 def main():
-	isDebugMode()
+	globalVars.debugMode = isDebugMode()
 	ip = preBoot()
 	port = 9000
-	dbInterface.dbHelper.setupDB()
+	dbSetup.setupDB(globalVars._dbPath)
 
 	import models
 
-	dbObj = models.messageModel()
-	dbObj.message("cats")
+	# dbObj = models.messageModel()
+	# dbObj.message("cats")
 
 	dbObj2 = models.messageModel(21)
 	dbObj2.message("newMessage")
@@ -47,6 +56,17 @@ def main():
 
 	dbObj4 = models.messageModel(message="new")
 	print(dbObj4.message() + " " + dbObj4.getTimestamp())
+
+	msg = models.messageModel(30)
+	print(msg.message() + msg.getTimestamp())
+
+	indexList = dbInterface.getBottomIndexes(10)
+	indexList.reverse()
+	for index in indexList:
+		index = str(index)
+		index = index.strip('(),')
+		msg = models.messageModel(index)
+		print(msg.message() + msg.getTimestamp())
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))

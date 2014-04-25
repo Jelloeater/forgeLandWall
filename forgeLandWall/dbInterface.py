@@ -1,46 +1,23 @@
 __author__ = 'Jesse'
 
 import sqlite3
-import os
+
+from main import globalVars
 
 
-class dbHelper():
-	_dbPath = "main.db"
-	# Please don't mess with this, unless we want to do multiple DB's? :)
-	# TODO (Wish list) Implement multiple db?
+def getBottomIndexes(numberOfBottomIndexesToGet=1):
+	"""Gets X number of index values from the bottom of the message table"""
+	dbConnection = sqlite3.connect(globalVars._dbPath)
+	dbcursor = dbConnection.cursor()
 
-	def __init__(self):
-		pass
+	dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT ' + str(numberOfBottomIndexesToGet))
+	indexList = dbcursor.fetchall()
+	dbConnection.close()
 
-	@staticmethod
-	def setupDB():
-		if not os.path.isfile(dbHelper._dbPath):
-			print("Database Missing")
-			dbConnection = sqlite3.connect(dbHelper._dbPath)
-			dbcursor = dbConnection.cursor()
-
-			dbcursor.execute('CREATE TABLE "messages" (\
-				"message"  ,\
-				"timestamp"  ,\
-				"index"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL\
-			);')
-
-			dbConnection.commit()
-			dbConnection.close()
-			print ("Database generated")
-
-	# TODO Write method to get X number of records from bottom?
-	@staticmethod
-	def getLastIndex():  # We will use this for getting an certain number of records
-		dbConnection = sqlite3.connect(dbHelper._dbPath)
-		dbcursor = dbConnection.cursor()
-		dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT 1')
-		lastIndex = dbcursor.fetchone()
-		dbConnection.close()
-		if lastIndex is None:  # If the column is empty
-			return 1
-		else:
-			return lastIndex[0]
+	if indexList is None:  # If the column is empty
+		return [1]
+	else:
+		return indexList
 
 
 # TODO Use SQL select * to get everything, DON'T SPAM QUERYS! Let the program do the work!
@@ -51,4 +28,9 @@ def getMessagesFromDB():
 def searchMessagesFromDB():
 	"""Searches the database and return a list of message objects"""
 	# TODO Write search function that returns a ... just see the docstring -_-
+	# Get last x index numbers
+	# Pull X records
+	# Throw records in a list
+	# ?
+	# Profit!!!
 	pass
