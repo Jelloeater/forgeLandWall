@@ -2,12 +2,13 @@ __author__ = 'Jesse'
 
 import sqlite3
 
-from main import globalVars
+import main
+import models
 
 
 def getBottomIndexes(numberOfBottomIndexesToGet=1):
 	"""Gets X number of index values from the bottom of the message table"""
-	dbConnection = sqlite3.connect(globalVars._dbPath)
+	dbConnection = sqlite3.connect(main.globalVars._dbPath)
 	dbcursor = dbConnection.cursor()
 
 	dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT ' + str(numberOfBottomIndexesToGet))
@@ -21,8 +22,15 @@ def getBottomIndexes(numberOfBottomIndexesToGet=1):
 
 
 # TODO Use SQL select * to get everything, DON'T SPAM QUERYS! Let the program do the work!
+
 def getMessagesFromDB():
-	pass
+	indexList = getBottomIndexes(10)
+	indexList.reverse()
+	for index in indexList:
+		index = str(index)
+		index = index.strip('(),')
+		msg = models.messageModel(index)
+		print(msg.message() + msg.getTimestamp())
 
 
 def searchMessagesFromDB():

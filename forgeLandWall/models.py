@@ -38,7 +38,6 @@ class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
 			self.__saveRecord()
 
 	def getTimestamp(self):
-		print(self._debugMode)
 		return self.__timestamp
 
 
@@ -50,11 +49,13 @@ class messageModel(main.globalVars):  # CREATE OR READ RECORD FROM DB
 		return dbConn, dbcursor
 
 	# TODO Move to dbInterface.dbHelper Class?
+
 	@staticmethod
 	def __dbClose(dbConn):
-		print("Connection Closed")
+		if main.globalVars._debugMode: print("Connection Closed")
 		dbConn.commit()
 		dbConn.close()
+
 
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""

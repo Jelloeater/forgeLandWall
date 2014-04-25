@@ -4,10 +4,10 @@ __author__ = 'Jesse'
 
 import argparse
 
-import dbInterface
 import networkInfo
 import views
-
+# import dbInterface
+# FIXME BROKEN
 
 def isDebugMode():
 	argParseHandle = argparse.ArgumentParser()
@@ -29,17 +29,16 @@ def preBoot():
 class globalVars():
 	def __init__(self):
 		pass
-
 	_debugMode = isDebugMode()
 	_dbPath = "main.db"
-
 
 def main():
 	globalVars.debugMode = isDebugMode()
 	ip = preBoot()
 	port = 9000
-	dbSetup.setupDB(globalVars._dbPath)
+	dbSetup.setupDB()
 
+	# TEST CODE
 	import models
 
 	# dbObj = models.messageModel()
@@ -60,13 +59,10 @@ def main():
 	msg = models.messageModel(30)
 	print(msg.message() + msg.getTimestamp())
 
-	indexList = dbInterface.getBottomIndexes(10)
-	indexList.reverse()
-	for index in indexList:
-		index = str(index)
-		index = index.strip('(),')
-		msg = models.messageModel(index)
-		print(msg.message() + msg.getTimestamp())
+
+# dbInterface.getMessagesFromDB()  # BROKEN
+# FIXME Move db connection to db interface class, that way we can call dbInterface methods from main
+
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))

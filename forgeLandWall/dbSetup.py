@@ -1,14 +1,17 @@
 import os
 import sqlite3
 
+import main
+
+
 __author__ = 'Jesse'
 
 
-def setupDB(dbPath):
+def setupDB():
 	"""Initialize the database if it does not exist yet"""
-	if not os.path.isfile(dbPath):
+	if not os.path.isfile(main.globalVars._dbPath):
 		print("Database Missing")
-		dbConnection = sqlite3.connect(dbPath)
+		dbConnection = sqlite3.connect(main.globalVars._dbPath)
 		dbcursor = dbConnection.cursor()
 
 		dbcursor.execute('CREATE TABLE "messages" (\
