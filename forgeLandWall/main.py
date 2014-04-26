@@ -7,8 +7,6 @@ __author__ = 'Jesse'
 
 import forgeLandWall.dbSetup as dbSetup
 import forgeLandWall.views as views
-import forgeLandWall.dbInterface as dbInterface
-import models
 
 
 
@@ -19,6 +17,7 @@ def main():
 	dbSetup.setupDB()
 
 	# TEST CODE
+	# TODO Need to test this code
 
 	# dbObj = models.messageModel()
 	# dbObj.message("dogs")
@@ -38,9 +37,6 @@ def main():
 	# msg = models.messageModel(30)
 	# print(msg.message() + msg.getTimestamp())
 
-
-	print(dbInterface.getMessagesFromDBasJSONArray(5))
-	print(dbInterface.getMessagesFromDBasJSONObjectArray(5))
 
 	print("Serving on: http://" + str(ip) + ":" + str(port))
 	httpd = make_server(ip, port, webHandler)

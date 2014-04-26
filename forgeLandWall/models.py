@@ -1,7 +1,7 @@
 import datetime
 
 # from forgeLandWall.dbConnection import dbConnect, dbClose
-import forgeLandWall.dbConnection as dbConnection
+import forgeLandWall.dbConnManage as dbConnection
 from forgeLandWall.settings import globalVars
 
 
@@ -46,9 +46,9 @@ class messageModel(globalVars):
 
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""
-		if globalVars._debugMode: print("Searching for: " + searchStr)
-		dbConn, dbcursor = dbConnection.dbConnect()
 
+		dbConn, dbcursor = dbConnection.dbConnect()
+		if globalVars._debugMode: print("Searching for: " + searchStr)
 		try:
 			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
 			dbcursor.execute(sqlStr)
@@ -56,6 +56,7 @@ class messageModel(globalVars):
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
+			if globalVars._debugMode: print("Record Found: " + searchStr)
 		except TypeError:
 			# FIXME Add better exception, no Pokemon exceptions!
 			self.__messageTxt = "CANNOT FIND MESSAGE: " + searchStr
@@ -104,6 +105,7 @@ class messageModel(globalVars):
 		dbConn, dbcursor = dbConnection.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
+		if globalVars._debugMode: print("RECORD DELETED")
 		dbConnection.dbClose(dbConn)
 
 	@staticmethod

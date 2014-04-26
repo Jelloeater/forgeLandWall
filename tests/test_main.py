@@ -4,12 +4,9 @@ import os
 from subprocess import Popen
 import time
 
-
 import forgeLandWall.settings as settings
 
-
 __author__ = 'Jesse'
-
 
 class TestMain(TestCase):
 	def setUp(self):

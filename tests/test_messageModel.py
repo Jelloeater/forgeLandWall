@@ -11,11 +11,18 @@ class TestMessageModel(TestCase):
 		"""Go-to project root so we can access the database"""
 		os.chdir("..")
 		os.chdir("forgeLandWall")
+		import forgeLandWall.settings
+		forgeLandWall.settings.globalVars._debugMode = True
+		print("TEST SETUP")
 
 	def tearDown(self):
-		"""Delete test message"""
-		dbObj = models.messageModel(message=TestMessageModel.messageStr)
-		dbObj.deleteRecord()
+		"""Delete test messages"""
+		import forgeLandWall.dbConnManage as dbConnManage
+		dbConn, dbcursor = dbConnManage.dbConnect()
+		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "' + TestMessageModel.messageStr + '";'
+		dbcursor.execute(sqlStr)
+		dbConnManage.dbClose(dbConn)
+		print("TEST TEARDOWN")
 
 	def test_message(self):
 		# Write
@@ -33,9 +40,15 @@ class TestMessageModel(TestCase):
 			self.fail()
 
 	def test_deleteRecord(self):
+		# Create message
+		dbObj1 = models.messageModel()
+		dbObj1.message(TestMessageModel.messageStr)
+
+		# Delete message
 		dbObj3 = models.messageModel(message=TestMessageModel.messageStr)
 		dbObj3.deleteRecord()
 
+		# Search for "missing" record
 		dbObj = models.messageModel(message=TestMessageModel.messageStr)
 		msgStr = dbObj.message()
 

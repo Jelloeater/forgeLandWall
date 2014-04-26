@@ -7,16 +7,15 @@ __author__ = 'Jesse Laptop'
 
 
 def dbConnect():
-	""" Connects to Database :rtype : dbConn, dbcursor """
+	""" Connects to Database :rtype : dbConn, dbCur """
 	if globalVars._debugMode: print("Connection Opened")
 	dbConn = sqlite3.connect(globalVars._dbPath)
-	dbcursor = dbConn.cursor()
+	dbCur = dbConn.cursor()
 
-	return dbConn, dbcursor
-
+	return dbConn, dbCur
 
 def dbClose(dbConn):
 	"""	Closes the Database Connection """
-	if globalVars._debugMode: print("Connection Closed")
 	dbConn.commit()
 	dbConn.close()
+	if globalVars._debugMode: print("Connection Closed")

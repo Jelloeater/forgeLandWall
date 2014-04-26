@@ -1,6 +1,6 @@
 import os
 from forgeLandWall.settings import globalVars
-import forgeLandWall.dbConnection as dbConnection
+import forgeLandWall.dbConnManage as dbConnection
 
 
 __author__ = 'Jesse'
