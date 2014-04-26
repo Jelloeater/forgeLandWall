@@ -1,26 +1,20 @@
-import dbSetup
-from forgeLandWall.settings import isDebugMode
+from wsgiref.simple_server import make_server
+
+import settings
+
 
 __author__ = 'Jesse'
 
-import networkInfo
+import dbSetup
 import views
 import dbInterface
-# FIXME BROKEN
 
 
-
-def preBoot():
-	if isDebugMode():
-		print("DEBUG MODE ENABLED")
-		return networkInfo.getIpSocket()
-	else:
-		return networkInfo.get_lan_ip()
 
 
 def main():
-	ip = preBoot()
-	port = 9000
+	ip = settings.getIpAddress()
+	port = settings.globalVars._portNumber
 	dbSetup.setupDB()
 
 	# TEST CODE
@@ -47,10 +41,9 @@ def main():
 	print(dbInterface.getMessagesFromDBasJSONArray(5))
 	print(dbInterface.getMessagesFromDBasJSONObjectArray(5))
 
-
-# print("Serving on: http://" + str(ip) + ":" + str(port))
-# httpd = make_server(ip, port, webHandler)
-# httpd.serve_forever()
+	print("Serving on: http://" + str(ip) + ":" + str(port))
+	httpd = make_server(ip, port, webHandler)
+	httpd.serve_forever()
 
 
 class webHandler:

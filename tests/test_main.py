@@ -4,7 +4,8 @@ import os
 from subprocess import Popen
 import time
 
-from forgeLandWall import main
+import forgeLandWall.settings as settings
+
 
 __author__ = 'Jesse'
 
@@ -20,7 +21,7 @@ class TestMain(TestCase):
 		pass
 
 	def test_main(self):
-		url = "http://" + str(main.ip) + ":" + str(main.port) + "/"
+		url = "http://" + str(settings.getIpAddress()) + ":" + str(settings.globalVars._portNumber) + "/"
 
 		print("Testing: " + url)
 
