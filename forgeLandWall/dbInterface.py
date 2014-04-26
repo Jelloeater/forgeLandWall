@@ -39,6 +39,33 @@ def getMessagesFromDB(numberToGet):
 	return msgList
 
 
+class msgObj(object):
+	def __init__(self, msg, time):
+		self.msg = msg
+		self.time = time
+
+
+def getDict(obj):
+	return obj.__dict__
+
+
+class empty():
+	pass
+
+
+def getMessageJSONObjects(numberToGet):
+	msgList = getMessagesFromDB(numberToGet)
+
+	msgObjList = []
+
+	for messageModelInstance in msgList:
+		msgStr = models.messageModel.message(messageModelInstance)
+		timeStr = models.messageModel.getTimestamp(messageModelInstance)
+		msgObjList.append(msgObj(msgStr, timeStr))
+
+	return json.dumps(msgObjList, default=getDict, sort_keys=True)
+
+
 def getMessagesFromDBasJSONArray(numberToGet):
 	msgList = getMessagesFromDB(numberToGet)
 
@@ -53,29 +80,7 @@ def getMessagesFromDBasJSONArray(numberToGet):
 	msgListBag = zip(msgListArray, timeListArray)
 
 	retStr = json.dumps(msgListBag, sort_keys=True)
-	return retStr
 
-
-class Empty:
-	pass
-
-
-def getMessagesFromDBasJSONObj(numberToGet):
-	msgList = getMessagesFromDB(numberToGet)
-
-	msgListBag = []
-	msgListObj = Empty()
-
-	for messageModelInstance in msgList:
-		msgStr = models.messageModel.message(messageModelInstance)
-		timeStr = models.messageModel.getTimestamp(messageModelInstance)
-		msgListObj.msg = msgStr
-		msgListObj.time = timeStr
-	# msgListBag.append(msgListObj)
-
-	print(msgListObj.__dict__)
-	print(msgListBag)
-	retStr = json.dumps(msgListObj.__dict__, sort_keys=True)
 	return retStr
 
 
