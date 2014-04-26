@@ -19,6 +19,7 @@ class globalVars():
 	_portNumber = 9000
 	_debugMode = isDebugMode()
 	_dbPath = "main.db"
+	# FIXME Needs to be made into an absolute path
 
 	def __init__(self):
 		pass
