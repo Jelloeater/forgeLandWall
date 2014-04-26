@@ -2,8 +2,8 @@ from forgeLandWall.settings import globalVars
 
 __author__ = 'Jesse'
 
-import dbConnection
-import models
+import forgeLandWall.dbConnection as dbConnection
+import forgeLandWall.models as models
 import json
 
 

@@ -1,7 +1,7 @@
 import datetime
 
 # from forgeLandWall.dbConnection import dbConnect, dbClose
-import dbConnection
+import forgeLandWall.dbConnection as dbConnection
 from forgeLandWall.settings import globalVars
 
 
@@ -46,7 +46,7 @@ class messageModel(globalVars):
 
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""
-		print("Searching for: " + searchStr)
+		if globalVars._debugMode: print("Searching for: " + searchStr)
 		dbConn, dbcursor = dbConnection.dbConnect()
 
 		try:

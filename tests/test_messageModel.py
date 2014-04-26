@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 import forgeLandWall.models as models
+import os
 
 
 __author__ = 'Jesse'
@@ -8,7 +9,8 @@ __author__ = 'Jesse'
 
 class TestMessageModel(TestCase):
 	def setUp(self):
-		pass
+		os.chdir("..")  # Go-to project root so we can access the database
+		os.chdir("forgeLandWall")
 
 	def tearDown(self):
 		pass
@@ -23,7 +25,7 @@ class TestMessageModel(TestCase):
 		dbObj2 = models.messageModel(message=messageStr)
 		dbMessageStr = dbObj2.message()
 
-		if dbMessageStr is messageStr:
+		if dbMessageStr == messageStr:
 			pass
 		else:
 			self.fail()

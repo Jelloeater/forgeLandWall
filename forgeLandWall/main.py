@@ -1,13 +1,14 @@
 from wsgiref.simple_server import make_server
 
-import settings
+import forgeLandWall.settings as settings
 
 
 __author__ = 'Jesse'
 
-import dbSetup
-import views
-import dbInterface
+import forgeLandWall.dbSetup as dbSetup
+import forgeLandWall.views as views
+import forgeLandWall.dbInterface as dbInterface
+import models
 
 
 
@@ -20,7 +21,7 @@ def main():
 	# TEST CODE
 
 	# dbObj = models.messageModel()
-	# dbObj.message("cats")
+	# dbObj.message("dogs")
 
 	# dbObj2 = models.messageModel(21)
 	# dbObj2.message("newMessage")
@@ -42,8 +43,8 @@ def main():
 	print(dbInterface.getMessagesFromDBasJSONObjectArray(5))
 
 	print("Serving on: http://" + str(ip) + ":" + str(port))
-	httpd = make_server(ip, port, webHandler)
-	httpd.serve_forever()
+	# httpd = make_server(ip, port, webHandler)
+	# httpd.serve_forever()
 
 
 class webHandler:
