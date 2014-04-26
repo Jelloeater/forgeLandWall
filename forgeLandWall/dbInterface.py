@@ -92,3 +92,9 @@ def searchMessagesFromDB():
 	# ?
 	# Profit!!!
 	pass
+
+def _clearMessageTable():
+	dbConn, dbcursor = dbConnection.dbConnect()
+	sqlStr = 'DELETE FROM messages;'
+	dbcursor.execute(sqlStr)
+	dbConnection.dbClose(dbConn)

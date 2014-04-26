@@ -1,33 +1,45 @@
+__author__ = 'Jesse'
 from unittest import TestCase
-
 import forgeLandWall.models as models
 import os
 
 
-__author__ = 'Jesse'
-
-
 class TestMessageModel(TestCase):
+	messageStr = "testMessagePleaseIgnore"
+
 	def setUp(self):
-		os.chdir("..")  # Go-to project root so we can access the database
+		"""Go-to project root so we can access the database"""
+		os.chdir("..")
 		os.chdir("forgeLandWall")
 
 	def tearDown(self):
-		pass
+		"""Delete test message"""
+		dbObj = models.messageModel(message=TestMessageModel.messageStr)
+		dbObj.deleteRecord()
 
 	def test_message(self):
 		# Write
-		messageStr = "testMessagePleaseIgnore"
+
 		dbObj = models.messageModel()
-		dbObj.message(messageStr)
+		dbObj.message(TestMessageModel.messageStr)
 
 		# Search and read back
-		dbObj2 = models.messageModel(message=messageStr)
+		dbObj2 = models.messageModel(message=TestMessageModel.messageStr)
 		dbMessageStr = dbObj2.message()
 
-		if dbMessageStr == messageStr:
+		if dbMessageStr == TestMessageModel.messageStr:
 			pass
 		else:
 			self.fail()
 
-			# FIXME Test need db path to be absolute!
+	def test_deleteRecord(self):
+		dbObj3 = models.messageModel(message=TestMessageModel.messageStr)
+		dbObj3.deleteRecord()
+
+		dbObj = models.messageModel(message=TestMessageModel.messageStr)
+		msgStr = dbObj.message()
+
+		if msgStr != TestMessageModel.messageStr:
+			pass
+		else:
+			self.fail()

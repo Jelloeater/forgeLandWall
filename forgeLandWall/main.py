@@ -43,8 +43,8 @@ def main():
 	print(dbInterface.getMessagesFromDBasJSONObjectArray(5))
 
 	print("Serving on: http://" + str(ip) + ":" + str(port))
-	# httpd = make_server(ip, port, webHandler)
-	# httpd.serve_forever()
+	httpd = make_server(ip, port, webHandler)
+	httpd.serve_forever()
 
 
 class webHandler:
