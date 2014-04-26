@@ -39,31 +39,30 @@ def getMessagesFromDB(numberToGet):
 	return msgList
 
 
-class msgObj(object):
-	def __init__(self, msg, time):
-		self.msg = msg
-		self.time = time
-
-
 def getDict(obj):
 	return obj.__dict__
 
 
-class empty():
+class empty():  # Dummy class for JSON creation
 	pass
 
 
-def getMessageJSONObjects(numberToGet):
+def getMessagesFromDBasJSONObjectArray(numberToGet):
 	msgList = getMessagesFromDB(numberToGet)
 
 	msgObjList = []
 
 	for messageModelInstance in msgList:
-		msgStr = models.messageModel.message(messageModelInstance)
-		timeStr = models.messageModel.getTimestamp(messageModelInstance)
-		msgObjList.append(msgObj(msgStr, timeStr))
+		msgObj = empty()
+		msgObj.message = models.messageModel.message(messageModelInstance)
+		msgObj.timestamp = models.messageModel.getTimestamp(messageModelInstance)
+		msgObjList.append(msgObj)
 
 	return json.dumps(msgObjList, default=getDict, sort_keys=True)
+
+
+# We need to set the default encoder to take the object instance
+# fields as JSON fields, to do that, we need getDict method to make it work
 
 
 def getMessagesFromDBasJSONArray(numberToGet):

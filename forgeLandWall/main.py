@@ -45,7 +45,7 @@ def main():
 
 
 	print(dbInterface.getMessagesFromDBasJSONArray(5))
-	print(dbInterface.getMessageJSONObjects(2))
+	print(dbInterface.getMessagesFromDBasJSONObjectArray(5))
 
 
 # print("Serving on: http://" + str(ip) + ":" + str(port))
