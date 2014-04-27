@@ -34,7 +34,7 @@ def getMessagesFromDB(numberToGet):
 		msg = models.messageModel(index)
 		msgList.append(msg)
 
-		if globalVars._debugMode: print(msg.message() + msg.getTimestamp())
+		if globalVars.debugMode: print(msg.message() + msg.getTimestamp())
 
 	return msgList
 

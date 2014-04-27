@@ -16,9 +16,9 @@ def isDebugMode():
 		return False
 
 class globalVars():
-	_portNumber = 9000
-	_debugMode = isDebugMode()
-	_dbPath = "main.db"
+	portNumber = 9000
+	debugMode = isDebugMode()
+	dbPath = "main.db"
 	# TODO Maybe work out any absolute path in case we get multiple folders
 
 	def __init__(self):
@@ -26,7 +26,7 @@ class globalVars():
 
 
 def getIpAddress():
-	if globalVars._debugMode:
+	if globalVars.debugMode:
 		print("DEBUG MODE ENABLED")
 		return networkInfo.getIpSocket()
 	else:

@@ -8,8 +8,8 @@ __author__ = 'Jesse'
 
 def setupDB():
 	"""Initialize the database if it does not exist yet"""
-	if not os.path.isfile(globalVars._dbPath):
-		if globalVars._debugMode: print("Database Missing")
+	if not os.path.isfile(globalVars.dbPath):
+		if globalVars.debugMode: print("Database Missing")
 		dbConn, dbcursor = dbConnection.dbConnect()
 
 		dbcursor.execute('CREATE TABLE "messages" (\
@@ -19,4 +19,4 @@ def setupDB():
 		);')
 
 		dbConnection.dbClose(dbConn)
-		if globalVars._debugMode: print ("Database generated")
+		if globalVars.debugMode: print ("Database generated")
