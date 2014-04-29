@@ -12,12 +12,14 @@ class TestMessageModel(TestCase):
 		os.chdir("..")
 		os.chdir("forgeLandWall")
 		import forgeLandWall.settings
+
 		forgeLandWall.settings.globalVars.debugMode = True
 		print("TEST SETUP")
 
 	def tearDown(self):
 		"""Delete test messages"""
 		import forgeLandWall.dbConnManage as dbConnManage
+
 		dbConn, dbcursor = dbConnManage.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "' + TestMessageModel.messageStr + '";'
 		dbcursor.execute(sqlStr)
@@ -34,7 +36,7 @@ class TestMessageModel(TestCase):
 		dbObj2 = models.messageModel(message=TestMessageModel.messageStr)
 		dbMessageStr = dbObj2.message()
 
-		self.assertEquals(dbMessageStr,TestMessageModel.messageStr)
+		self.assertEquals(dbMessageStr, TestMessageModel.messageStr)
 
 	def test_deleteRecord(self):
 		# Create message
@@ -49,24 +51,37 @@ class TestMessageModel(TestCase):
 		dbObj = models.messageModel(message=TestMessageModel.messageStr)
 		msgStr = dbObj.message()
 		testStr = "CANNOT FIND MESSAGE: " + TestMessageModel.messageStr
-		self.assertEquals(msgStr,testStr)
+		self.assertEquals(msgStr, testStr)
 
 
 	def test_missingRecordMessage(self):
 		# Looks up message that shouldn't exist
-		messageToTest="someMissingMessage"
+		messageToTest = "someMissingMessage"
 		dbOjb1 = models.messageModel(message=messageToTest)
 		messageStr = dbOjb1.message()
 		testStr = "CANNOT FIND MESSAGE: " + messageToTest
 
-		self.assertEqual(messageStr,testStr)
+		self.assertEqual(messageStr, testStr)
 
 	def test_missingRecordIndex(self):
 		# Looks up message that should NEVER exist
 		import random
-		x = random.randint(1,10)
+
+		x = random.randint(1, 10)
 		dbOjb1 = models.messageModel(x * -1)
 		messageStr = dbOjb1.message()
 		testStr = "CANNOT FIND MESSAGE @ INDEX" + str(x * -1)
 
-		self.assertEqual(messageStr,testStr)
+		self.assertEqual(messageStr, testStr)
+
+
+	def test_searchForRecords(self):
+		""""Search for many records containing string"""
+		# Setup records
+		dbObj = models.messageModel()
+		dbObj.message(TestMessageModel.messageStr+"timmy")
+		dbObj2 = models.messageModel()
+		dbObj2.message(TestMessageModel.messageStr+"jimmy")
+
+
+		self.fail(msg="Record not found")

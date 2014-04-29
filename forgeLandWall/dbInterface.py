@@ -52,7 +52,9 @@ class empty():
 
 
 def getMessagesFromDBasJSONObjectArray(numberToGet):
-	"""	Returns a JSON string of the numberToGet bottom database entries """
+	"""	Returns a JSON string of the numberToGet bottom database entries
+	:param numberToGet:
+	"""
 	msgList = getMessagesFromDB(numberToGet)
 
 	msgObjList = []
@@ -91,6 +93,7 @@ def getMessagesFromDBasJSONArray(numberToGet):
 
 def searchMessagesFromDB(messageIn = None):
 	"""Searches the database and return a list of message pairs in list form"""
+	# TODO Maybe remove this or rewrite is when done with models.getMessagesFromDB
 	if messageIn is not None:
 		import dbConnManage
 		dbConn, dbcursor = dbConnManage.dbConnect()
