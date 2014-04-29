@@ -29,7 +29,7 @@ class messageModel(globalVars):
 			# Index should still be used for edits and delete though
 			self.__index = index
 			self.__lookupRecordFromIndex()
-			if globalVars._debugMode: print("Record Found")
+			if globalVars.debugMode: print("Record Found")
 		# TODO Add check for record not found
 
 	def message(self, message=None):
@@ -48,7 +48,7 @@ class messageModel(globalVars):
 		"""Looks up ONLY the FIRST record that matches the search"""
 
 		dbConn, dbcursor = dbConnection.dbConnect()
-		if globalVars._debugMode: print("Searching for: " + searchStr)
+		if globalVars.debugMode: print("Searching for: " + searchStr)
 		try:
 			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
 			dbcursor.execute(sqlStr)
@@ -56,13 +56,13 @@ class messageModel(globalVars):
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
-			if globalVars._debugMode: print("Record Found: " + searchStr)
+			if globalVars.debugMode: print("Record Found: " + searchStr)
 		except TypeError:
 			# FIXME Add better exception, no Pokemon exceptions!
 			self.__messageTxt = "CANNOT FIND MESSAGE: " + searchStr
 			self.__timestamp = ""
 			self.__index = ""
-			if globalVars._debugMode: print("Record Not Found")
+			if globalVars.debugMode: print("Record Not Found")
 		dbConnection.dbClose(dbConn)
 
 
@@ -76,12 +76,12 @@ class messageModel(globalVars):
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
-			if globalVars._debugMode: print("Looked up record")
+			if globalVars.debugMode: print("Looked up record")
 		except TypeError:
 			self.__messageTxt = "CANNOT FIND MESSAGE @ INDEX" + str(self.__index)
 			self.__timestamp = ""
 			self.__index = ""
-			if globalVars._debugMode: print("Record does not exist")
+			if globalVars.debugMode: print("Record does not exist")
 
 		dbConn.close()
 
@@ -105,7 +105,7 @@ class messageModel(globalVars):
 		dbConn, dbcursor = dbConnection.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
-		if globalVars._debugMode: print("RECORD DELETED")
+		if globalVars.debugMode: print("RECORD DELETED")
 		dbConnection.dbClose(dbConn)
 
 	@staticmethod

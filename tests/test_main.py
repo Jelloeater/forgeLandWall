@@ -19,7 +19,7 @@ class TestMain(TestCase):
 		pass
 
 	def test_main(self):
-		url = "http://" + str(settings.getIpAddress()) + ":" + str(settings.globalVars._portNumber) + "/"
+		url = "http://" + str(settings.getIpAddress()) + ":" + str(settings.globalVars.portNumber) + "/"
 
 		print("Testing: " + url)
 

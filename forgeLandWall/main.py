@@ -13,7 +13,7 @@ import forgeLandWall.views as views
 
 def main():
 	ip = settings.getIpAddress()
-	port = settings.globalVars._portNumber
+	port = settings.globalVars.portNumber
 	dbSetup.setupDB()
 
 	# TEST CODE
@@ -40,7 +40,7 @@ def main():
 
 	print("Serving on: http://" + str(ip) + ":" + str(port))
 	httpd = make_server(ip, port, webHandler)
-	httpd.serve_forever()
+	# httpd.serve_forever()
 
 
 class webHandler:

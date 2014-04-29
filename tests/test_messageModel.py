@@ -12,7 +12,7 @@ class TestMessageModel(TestCase):
 		os.chdir("..")
 		os.chdir("forgeLandWall")
 		import forgeLandWall.settings
-		forgeLandWall.settings.globalVars._debugMode = True
+		forgeLandWall.settings.globalVars.debugMode = True
 		print("TEST SETUP")
 
 	def tearDown(self):
