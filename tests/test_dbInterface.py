@@ -45,7 +45,4 @@ class TestDbInterface(TestCase):
 		json3str = objDict['message']
 		# Pull key value from dict
 
-		if json3str == "json3":
-			pass
-		else:
-			self.fail(msg="JSON Mis-match")
+		self.assertEquals(json3str,"json3","JSON Mismatch")

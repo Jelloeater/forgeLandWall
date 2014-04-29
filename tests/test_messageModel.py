@@ -34,10 +34,7 @@ class TestMessageModel(TestCase):
 		dbObj2 = models.messageModel(message=TestMessageModel.messageStr)
 		dbMessageStr = dbObj2.message()
 
-		if dbMessageStr == TestMessageModel.messageStr:
-			pass
-		else:
-			self.fail()
+		self.assertEquals(dbMessageStr,TestMessageModel.messageStr)
 
 	def test_deleteRecord(self):
 		# Create message
@@ -51,15 +48,15 @@ class TestMessageModel(TestCase):
 		# Search for "missing" record
 		dbObj = models.messageModel(message=TestMessageModel.messageStr)
 		msgStr = dbObj.message()
+		testStr = "CANNOT FIND MESSAGE: " + TestMessageModel.messageStr
+		self.assertEquals(msgStr,testStr)
 
-		if msgStr != TestMessageModel.messageStr:
-			pass
-		else:
-			self.fail()
 
 	def test_missingRecord(self):
 		# Looks up message that shouldn't exist
-		dbOjb1 = models.messageModel(message="missingMessage")
+		messageToTest="someMissingMessage"
+		dbOjb1 = models.messageModel(message=messageToTest)
 		messageStr = dbOjb1.message()
-		testStr = "CANNOT FIND MESSAGE:"
-		TestCase.assertEqual(self,messageStr,testStr)
+		testStr = "CANNOT FIND MESSAGE: " + messageToTest
+
+		self.assertEqual(messageStr,testStr)
