@@ -52,11 +52,21 @@ class TestMessageModel(TestCase):
 		self.assertEquals(msgStr,testStr)
 
 
-	def test_missingRecord(self):
+	def test_missingRecordMessage(self):
 		# Looks up message that shouldn't exist
 		messageToTest="someMissingMessage"
 		dbOjb1 = models.messageModel(message=messageToTest)
 		messageStr = dbOjb1.message()
 		testStr = "CANNOT FIND MESSAGE: " + messageToTest
+
+		self.assertEqual(messageStr,testStr)
+
+	def test_missingRecordIndex(self):
+		# Looks up message that should NEVER exist
+		import random
+		x = random.randint(1,10)
+		dbOjb1 = models.messageModel(x * -1)
+		messageStr = dbOjb1.message()
+		testStr = "CANNOT FIND MESSAGE @ INDEX" + str(x * -1)
 
 		self.assertEqual(messageStr,testStr)
