@@ -7,7 +7,7 @@ from forgeLandWall import dbInterface
 __author__ = 'Jesse'
 
 
-class TestdbInterface(TestCase):
+class TestDbInterface(TestCase):
 
 	def setUp(self):
 		os.chdir("..")  # Go-to project root
@@ -39,12 +39,13 @@ class TestdbInterface(TestCase):
 		retPut = dbInterface.getMessagesFromDBasJSONObjectArray(3)
 		# Get the Data from the db
 
-		ObjList = json.loads(retPut)
-		testStr = ObjList[0].message
-		print("JSON: " + retPut)
-		print("JSONtoObj: " + testStr)
-		if retPut == testStr:
+		objList = json.loads(retPut)
+		objDict = objList[2]
+		# Get Dict from List
+		json3str = objDict['message']
+		# Pull key value from dict
+
+		if json3str == "json3":
 			pass
 		else:
-			self.fail(msg="Unfinished Test")
-		# TODO Write JSON unit test
+			self.fail(msg="JSON Mis-match")

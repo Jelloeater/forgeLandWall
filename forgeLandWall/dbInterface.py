@@ -24,7 +24,11 @@ def getBottomIndexes(numberOfBottomIndexesToGet=1):
 # TODO Use SQL select * to get everything, DON'T SPAM QUERYS! Let the program do the work!
 
 def getMessagesFromDB(numberToGet):
-	"""	Returns list of messages as instances of messageModel (Ex msgStr = models.messageModel.message(msgMdlInst)) """
+	"""	Returns list of messages as instances of messageModel
+	@param numberToGet Number of db records to return
+	@return: msgList
+	@rtype : list
+	"""
 	indexList = getBottomIndexes(numberToGet)
 	indexList.reverse()
 	msgList = []
@@ -40,14 +44,17 @@ def getMessagesFromDB(numberToGet):
 
 
 def getDict(obj):
+	"""The default encoder to take the object instances	fields as JSON fields"""
 	return obj.__dict__
 
 
-class empty():  # Dummy class for JSON creation
+class empty():
+	"""Dummy class for JSON creation"""
 	pass
 
 
 def getMessagesFromDBasJSONObjectArray(numberToGet):
+	"""	Returns a JSON string of the numberToGet bottom database entries """
 	msgList = getMessagesFromDB(numberToGet)
 
 	msgObjList = []
@@ -61,11 +68,12 @@ def getMessagesFromDBasJSONObjectArray(numberToGet):
 	return json.dumps(msgObjList, default=getDict, sort_keys=True)
 
 
-# We need to set the default encoder to take the object instance
-# fields as JSON fields, to do that, we need getDict method to make it work
-
-
 def getMessagesFromDBasJSONArray(numberToGet):
+	"""
+	Returns 2D Array of messages & timestamps
+	@param numberToGet:
+	@return: JSON String
+	"""
 	msgList = getMessagesFromDB(numberToGet)
 
 	msgListArray = []
