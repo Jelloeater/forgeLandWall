@@ -89,15 +89,22 @@ def getMessagesFromDBasJSONArray(numberToGet):
 	return retStr
 
 
-def searchMessagesFromDB():
-	"""Searches the database and return a list of message objects"""
-	# TODO Write search function that returns a ... just see the docstring -_-
-	# Get last x index numbers
-	# Pull X records
-	# Throw records in a list
-	# ?
-	# Profit!!!
-	pass
+def searchMessagesFromDB(messageIn = None):
+	"""Searches the database and return a list of message pairs in list form"""
+	if messageIn is not None:
+		import dbConnManage
+		dbConn, dbcursor = dbConnManage.dbConnect()
+
+		sqlStr = 'SELECT "message","timestamp" FROM messages ' \
+		         'WHERE "message" LIKE "%' + messageIn + '%";'
+		dbcursor.execute(sqlStr)
+		results = dbcursor.fetchall()
+
+		dbConnManage.dbClose(dbConn)
+		return results
+	else:
+		return ""
+
 
 def _clearMessageTable():
 	dbConn, dbcursor = dbConnection.dbConnect()

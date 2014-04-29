@@ -28,7 +28,7 @@ class TestDbInterface(TestCase):
 		import forgeLandWall.dbConnManage as dbConnManage
 		dbConn, dbcursor = dbConnManage.dbConnect()
 		messageStr = "json"
-		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "' + messageStr + '";'
+		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "%' + messageStr + '%";'
 		dbcursor.execute(sqlStr)
 		dbConnManage.dbClose(dbConn)
 		print("TEST TEARDOWN")
@@ -46,3 +46,10 @@ class TestDbInterface(TestCase):
 		# Pull key value from dict
 
 		self.assertEquals(json3str,"json3","JSON Mismatch")
+
+
+	def test_searchMessagesFromDB(self):
+		results = dbInterface.searchMessagesFromDB("json")
+		x = results[2]
+
+		self.assertEqual(x[0],"json3")

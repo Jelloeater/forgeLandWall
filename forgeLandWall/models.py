@@ -30,7 +30,6 @@ class messageModel(globalVars):
 			self.__index = index
 			self.__lookupRecordFromIndex()
 			if globalVars.debugMode: print("Record Found")
-		# TODO Add check for record not found
 
 	def message(self, message=None):
 		"""Gets message from object, or writes message to DB"""
