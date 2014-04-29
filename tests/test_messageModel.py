@@ -56,3 +56,10 @@ class TestMessageModel(TestCase):
 			pass
 		else:
 			self.fail()
+
+	def test_missingRecord(self):
+		# Looks up message that shouldn't exist
+		dbOjb1 = models.messageModel(message="missingMessage")
+		messageStr = dbOjb1.message()
+		testStr = "CANNOT FIND MESSAGE:"
+		TestCase.assertEqual(self,messageStr,testStr)

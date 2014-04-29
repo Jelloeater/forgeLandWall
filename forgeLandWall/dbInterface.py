@@ -21,8 +21,6 @@ def getBottomIndexes(numberOfBottomIndexesToGet=1):
 		return indexList
 
 
-# TODO Use SQL select * to get everything, DON'T SPAM QUERYS! Let the program do the work!
-
 def getMessagesFromDB(numberToGet):
 	"""	Returns list of messages as instances of messageModel
 	@param numberToGet Number of db records to return
