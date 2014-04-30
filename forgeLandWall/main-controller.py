@@ -35,17 +35,37 @@ class webHandler:
 			pathLength = len(path)
 			print(pathLength)
 
-			if path[1] == "post" and pathLength <= 2:
-				return views.HTTP.rawPostInput(self)
 			if path[1] == "hi"and pathLength <= 2:
 				return views.HTTP.GET_hi(self)
 			if path[1] == "rawJSON"and pathLength <= 2:
 				# TODO Split string for amount
 				return views.JSONTxt.getJSON(self)
 			else:
-				return views.HTTP.notfound(self)
+				return views.HTTP.notFound(self)
 		else:
-			return views.HTTP.GET_index(self)
+			return views.HTTP.GET_MainIndex(self)
+		# /         Create
+		# /update   update
+		# /delete   delete
+		# FIXME Add specific pages for tasks
 
 if __name__ == "__main__":  # Runs Script
 	main()
+
+class postControl:
+	@staticmethod
+	def readPost(postMessageIn):
+		pass
+		# FIXME Write filter method
+	@staticmethod
+	def createRecord(messageIn = None):
+		pass
+	# TODO Write Create call
+	@staticmethod
+	def updateRecord(messageIn = None):
+		pass
+	# TODO write update call
+	@staticmethod
+	def deleteRecord(messageIn = None):
+		pass
+	# TODO write delete call
