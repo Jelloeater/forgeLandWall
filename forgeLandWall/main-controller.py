@@ -24,16 +24,28 @@ class webHandler:
 
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
+		print(path)
+		path = str(path)
 
-		if path == "/":
-			return views.GET_index(self)
-		if path == "/post":
-			return views.rawPostInput(self)
-		if path == "/hi":
-			return views.GET_hi(self)
+		if path is not "/":
+			path = path.split('/')
+			print(path[0])
+			print(path[1])
+			# print(path[2])
+			pathLength = len(path)
+			print(pathLength)
+
+			if path[1] == "post" and pathLength <= 2:
+				return views.HTTP.rawPostInput(self)
+			if path[1] == "hi"and pathLength <= 2:
+				return views.HTTP.GET_hi(self)
+			if path[1] == "rawJSON"and pathLength <= 2:
+				# TODO Split string for amount
+				return views.JSONTxt.getJSON(self)
+			else:
+				return views.HTTP.notfound(self)
 		else:
-			return views.notfound(self)
-
+			return views.HTTP.GET_index(self)
 
 if __name__ == "__main__":  # Runs Script
 	main()
