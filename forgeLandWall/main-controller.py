@@ -7,6 +7,7 @@ import forgeLandWall.dbSetup as dbSetup
 import forgeLandWall.views as views
 
 
+
 def main():
 	ip = settings.getIpAddress()
 	port = settings.globalVars.portNumber
@@ -17,7 +18,7 @@ def main():
 	httpd.serve_forever()
 
 
-class webHandler:
+class webHandler():
 	def __init__(self, environ, start_response):
 		self.environ = environ
 		self.start = start_response
@@ -51,28 +52,3 @@ class webHandler:
 
 if __name__ == "__main__":  # Runs Script
 	main()
-
-from forgeLandWall.models import messageModel
-class postControl(messageModel):
-	@staticmethod
-	def readPost(postMessageIn):
-		pass
-		# FIXME Write filter method
-		# TODO Should get all posts, this will be the main display
-		# TODO This might be in the wrong place?
-	@staticmethod
-	def createRecord(messageIn = None):
-		x = messageModel()
-		x.message(message=messageIn)
-
-	@staticmethod
-	def updateRecords(messageIn = None):
-		pass
-	# TODO write update call
-	# TODO 1) Seach for record index 2) update records (for loop)
-
-	@staticmethod
-	def deleteRecords(messageIn = None):
-		pass
-	# TODO 1) Seach for record index 2) update records (for loop)
-	# TODO write delete call
