@@ -18,7 +18,7 @@ class TestMessageModel(TestCase):
 
 	def tearDown(self):
 		"""Delete test messages"""
-		import forgeLandWall.dbConnManage as dbConnManage
+		from forgeLandWall.dbConnManage import dbConnManage
 
 		dbConn, dbcursor = dbConnManage.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "' + TestMessageModel.messageStr + '";'

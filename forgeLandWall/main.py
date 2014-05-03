@@ -1,11 +1,8 @@
 from wsgiref.simple_server import make_server
 import forgeLandWall.settings as settings
-
-__author__ = 'Jesse'
-
 import forgeLandWall.dbSetup as dbSetup
 import forgeLandWall.views as views
-
+__author__ = 'Jesse'
 
 
 def main():

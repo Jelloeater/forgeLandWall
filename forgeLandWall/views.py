@@ -1,6 +1,8 @@
 __author__ = 'Jesse'
 import POSTController
+import datetime
 # TODO Think about moving to modules down the road maybe?
+
 
 class HTMLHelper():
 	@staticmethod
@@ -25,11 +27,12 @@ class HTMLHelper():
 	@staticmethod
 	def getFooter(outputIn):
 		output = outputIn
-		import datetime
+
 		str(datetime.datetime.now().replace(microsecond=0))
 		output.append('<hr>Retrieved @ ' + str(datetime.datetime.now().replace(microsecond=0)))
 		# TODO Add footer
 		return output
+
 
 class HTTP(HTMLHelper):
 	@staticmethod
@@ -47,19 +50,15 @@ class HTTP(HTMLHelper):
 		print(path)
 		path = str(path)
 
-		if path is not "/":	path = path.split('/')
+		if path is not "/":    path = path.split('/')
 
-
-		if request_body == "": # For GET's and empty POST's
-		# In order to get here, the path HAS to be long enough to look for a record
-		# NOTE: We are NOT re-splitting the path, just going off what we took from the main method
-			try:
-				output.append(POSTController.JSONTxt.getJSON(int(path[2])))
-			except:
-				output.append("ERROR - Path NaN")
-
-
-		else: # We're getting a POST request
+		if request_body == "":  # For GET's and empty POST's
+			# In order to get here, the path HAS to be long enough to look for a record
+			# NOTE: We are NOT re-splitting the path, just going off what we took from the main method
+			if path[2].isdigit():  # Why try and catch, when you can think and do?
+				numberToGet = int(path[2])
+				output.append(POSTController.JSONTxt.getJSON(numberToGet))
+		else:  # We're getting a POST request
 			# request_body = POST Message
 			print('request Body')
 			print(request_body)
@@ -68,7 +67,6 @@ class HTTP(HTMLHelper):
 			if request_body == "create":
 				POSTController.postControl.createRecord("rawPOSTinput")
 
-
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
@@ -76,15 +74,10 @@ class HTTP(HTMLHelper):
 		# TODO Add query output?
 		yield ''.join(output)
 
-
-
-
 	@staticmethod
 	def GET_MainIndex(self):
 		""" HTML for create new message view + POST controller"""
 		output = HTMLHelper.getHeader()
-
-
 
 		output = HTMLHelper.getForm("create", output)
 
@@ -105,8 +98,6 @@ class HTTP(HTMLHelper):
 			output.append('<h1>FORM DATA</h1>')
 			output.append(request_body)
 
-
-
 		output = HTMLHelper.getFooter(output)
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
@@ -118,9 +109,7 @@ class HTTP(HTMLHelper):
 	def GET_edit(self):
 		output = HTMLHelper.getHeader()
 
-
 		output = HTMLHelper.getForm("edit", output)
-
 
 		output = HTMLHelper.getFooter(output)
 		output_len = sum(len(line) for line in output)
@@ -140,9 +129,7 @@ class HTTP(HTMLHelper):
 	def GET_delete(self):
 		output = HTMLHelper.getHeader()
 
-
 		output = HTMLHelper.getForm("delete", output)
-
 
 		output = HTMLHelper.getFooter(output)
 		output_len = sum(len(line) for line in output)

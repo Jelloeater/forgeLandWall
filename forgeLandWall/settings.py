@@ -15,6 +15,7 @@ def isDebugMode():
 	else:
 		return False
 
+
 class globalVars():
 	portNumber = 9000
 	debugMode = isDebugMode()

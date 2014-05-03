@@ -1,6 +1,6 @@
 import datetime
 
-import forgeLandWall.dbConnManage as dbConnection
+from dbConnManage import dbConnManage as dbConnection
 from forgeLandWall.settings import globalVars
 
 
@@ -41,7 +41,6 @@ class messageModel(globalVars):
 	def getTimestamp(self):
 		return self.__timestamp
 
-
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""
 
@@ -62,7 +61,6 @@ class messageModel(globalVars):
 			self.__index = ""
 			if globalVars.debugMode: print("Record Not Found")
 		dbConnection.dbClose(dbConn)
-
 
 	def __lookupRecordFromIndex(self):  # READ
 		dbConn, dbcursor = dbConnection.dbConnect()
@@ -93,8 +91,8 @@ class messageModel(globalVars):
 			dbConnection.dbClose(dbConn)
 		else:
 			dbConn, dbcursor = dbConnection.dbConnect()
-			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + str(
-				self.__getTimeStampFromSystem()) + '"  WHERE "index" = "' + str(self.__index) + '";'
+			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + \
+					str(self.__getTimeStampFromSystem()) + '"  WHERE "index" = "' + str(self.__index) + '";'
 			# TODO Add try and catch to SQL code
 			dbcursor.execute(sqlStr)
 			dbConnection.dbClose(dbConn)
@@ -106,7 +104,7 @@ class messageModel(globalVars):
 		if globalVars.debugMode: print("RECORD DELETED")
 		dbConnection.dbClose(dbConn)
 
-	def searchForRecords(self,messageIn = None):
+	def searchForRecords(self, messageIn=None):
 		# FIXME Search for records with matching indexes
 		# FIXME Return object array of matching records
 
