@@ -47,7 +47,9 @@ class webHandler():
 			else:
 				return views.HTTP.notFound(self)
 		else:
+			print('hi')
 			return views.HTTP.GET_MainIndex(self)
+
 		# root      Create
 		# /edit   update
 		# /delete   delete

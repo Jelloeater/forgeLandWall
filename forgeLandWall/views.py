@@ -12,7 +12,17 @@ class HTMLHelper():
 	def getHeader():
 		output = ['<pre>']
 		# TODO Add header
-		output.append("HEADER")
+		output.append("ForgeLand Message Board ")
+		output.append('<a href="/">View/Create</a>')
+		output.append('<a href="/edit">Edit</a>')
+		output.append('<a href="/delete">Delete</a>')
+		return output
+
+	@staticmethod
+	def getForm(formType, output):
+		if formType == "create":
+			output.append('<form method="post">CREATE<input type="text" name="create"><input type="submit"></form>')
+			print("got form")
 		return output
 
 	@staticmethod
@@ -51,13 +61,11 @@ class HTTP(HTMLHelper):
 		#create a simple form:
 
 		# TODO Add Universal Header call
-		output.append('<form method="post">')
-		# output.append('Create <input type="radio" name="command" value = "create">')
-		# output.append('Update <input type="radio" name="command" value = "update">')
-		# output.append('Delete <input type="radio" name="command" value = "delete">')
-		output.append('CREATE<input type="text" name="create">')
-		output.append('<input type="submit">')
-		output.append('</form>')
+
+
+		output = HTMLHelper.getForm("create", output)
+
+
 
 		# command=create&input=someTextHere
 		# If we detect input, do this

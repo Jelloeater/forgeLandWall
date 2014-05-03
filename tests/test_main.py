@@ -12,7 +12,7 @@ class TestMain(TestCase):
 	def setUp(self):
 		os.chdir("..")  # Go-to project root
 		os.chdir("forgeLandWall")
-		Popen(["python", "main-controller.py"])  # Runs server in the background
+		Popen(["python", "main.py"])  # Runs server in the background
 		time.sleep(.25)  # Gives server time to start
 
 	def tearDown(self):
