@@ -1,6 +1,7 @@
+from forgeLandWall import dbInterface
+from forgeLandWall.models import messageModel
 __author__ = 'Jesse'
 
-from forgeLandWall.models import messageModel
 
 class postControl(messageModel):
 	@staticmethod
@@ -25,3 +26,9 @@ class postControl(messageModel):
 		pass
 		# TODO 1) Seach for record index 2) update records (for loop)
 		# TODO write delete call
+
+
+class JSONTxt():
+	@staticmethod
+	def getJSON(numberToGet = 1):
+		return dbInterface.getMessagesFromDBasJSONObjectArray(numberToGet)

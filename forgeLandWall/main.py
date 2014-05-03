@@ -41,10 +41,12 @@ class webHandler():
 				return views.HTTP.GET_edit(self)
 			if path[1] == "delete"and pathLength <= 2:
 				return views.HTTP.GET_delete(self)
-			if path[1] == "rawJSON"and pathLength <= 2:
-				# TODO Split string for amount
-				return views.JSONTxt.getJSON(self)
+			if path[1] == "raw"and pathLength >= 2:
+				print path[1]
+				return views.HTTP.rawPostInput(self)
 			else:
+				print('NOT FOUND')
+				print path[1]
 				return views.HTTP.notFound(self)
 		else:
 			print('hi')

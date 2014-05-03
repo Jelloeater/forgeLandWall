@@ -1,34 +1,33 @@
 __author__ = 'Jesse'
-import dbInterface
 import POSTController
 # TODO Think about moving to modules down the road maybe?
-class JSONTxt:
-	@staticmethod
-	def getJSON(numberToGet = 1):
-		return dbInterface.getMessagesFromDBasJSONObjectArray(numberToGet)
 
 class HTMLHelper():
 	@staticmethod
 	def getHeader():
 		output = ['<pre>']
-		# TODO Add header
-		output.append("ForgeLand Message Board ")
-		output.append('<a href="/">View/Create</a>')
-		output.append('<a href="/edit">Edit</a>')
-		output.append('<a href="/delete">Delete</a>')
+		output.append("ForgeLand Message Board: ")
+		output.append(' <a href="/">View/Create</a>')
+		output.append(' <a href="/edit">Edit</a>')
+		output.append(' <a href="/delete">Delete</a> <hr>')
 		return output
 
 	@staticmethod
 	def getForm(formType, output):
 		if formType == "create":
 			output.append('<form method="post">CREATE<input type="text" name="create"><input type="submit"></form>')
-			print("got form")
+		if formType == "edit":
+			output.append('<form method="post">CREATE<input type="text" name="edit"><input type="submit"></form>')
+		if formType == "delete":
+			output.append('<form method="post">CREATE<input type="text" name="delete"><input type="submit"></form>')
 		return output
 
 	@staticmethod
 	def getFooter(outputIn):
 		output = outputIn
-		output.append("FOOTER!")
+		import datetime
+		str(datetime.datetime.now().replace(microsecond=0))
+		output.append('<hr>Retrieved @ ' + str(datetime.datetime.now().replace(microsecond=0)))
 		# TODO Add footer
 		return output
 
@@ -36,36 +35,59 @@ class HTTP(HTMLHelper):
 	@staticmethod
 	def rawPostInput(self):
 		output = ['']
+
 		try:
 			request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
 		except ValueError:
 			request_body_size = 0
-
 		request_body = self.environ['wsgi.input'].read(request_body_size)
-		print(request_body)
+
+		path = self.environ['PATH_INFO']
+		print('PATH: ')
+		print(path)
+		path = str(path)
+
+		if path is not "/":	path = path.split('/')
+
+
+		if request_body == "": # For GET's and empty POST's
+			# TODO Split string for amount
+			# TODO return RAW JSON
+
+			print(path[2])
+			try:
+				output.append(POSTController.JSONTxt.getJSON(int(path[2])))
+			except:
+				output.append("ERROR - Path NaN")
+
+
+		else: # We're getting a POST request
+			# request_body = POST Message
+			print('request Body')
+			print(request_body)
+
+			if request_body == "create":
+				POSTController.postControl.createRecord("rawPOSTinput")
+
 
 		output_len = sum(len(line) for line in output)
-
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-		output.append("True")
 		# TODO Add query output?
 		yield ''.join(output)
+
+
 
 
 	@staticmethod
 	def GET_MainIndex(self):
 		""" HTML for create new message view + POST controller"""
 		output = HTMLHelper.getHeader()
-		#create a simple form:
 
-		# TODO Add Universal Header call
 
 
 		output = HTMLHelper.getForm("create", output)
-
-
 
 		# command=create&input=someTextHere
 		# If we detect input, do this
@@ -87,25 +109,25 @@ class HTTP(HTMLHelper):
 
 
 		output = HTMLHelper.getFooter(output)
-
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-
 		yield ''.join(output)
 
 	@staticmethod
 	def GET_edit(self):
 		output = HTMLHelper.getHeader()
-		output.append('hi')
 
+
+		output = HTMLHelper.getForm("edit", output)
+
+
+		output = HTMLHelper.getFooter(output)
 		output_len = sum(len(line) for line in output)
-
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-
 		yield ''.join(output)
 
 	@staticmethod
@@ -118,12 +140,14 @@ class HTTP(HTMLHelper):
 	@staticmethod
 	def GET_delete(self):
 		output = HTMLHelper.getHeader()
-		output.append('hi')
 
+
+		output = HTMLHelper.getForm("delete", output)
+
+
+		output = HTMLHelper.getFooter(output)
 		output_len = sum(len(line) for line in output)
-
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-
 		yield ''.join(output)
