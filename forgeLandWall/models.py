@@ -1,6 +1,6 @@
 import datetime
 
-from dbConnManage import dbConnManage as dbConnection
+from dbConnManage import dbConnManage
 from forgeLandWall.settings import globalVars
 
 
@@ -9,7 +9,7 @@ __author__ = 'Jesse'
 # Yes, I know we're all adults here, but I don't like getting suggestions for methods I don't need
 
 
-class messageModel(globalVars):
+class messageModel(dbConnManage, globalVars):
 	# Creates record handle OR reads record from db
 	"""Represents a SINGLE record from the table, we manipulate the objects, rather then SQL"""
 
@@ -44,7 +44,7 @@ class messageModel(globalVars):
 	def __lookupRecordFromMessage(self, searchStr):
 		"""Looks up ONLY the FIRST record that matches the search"""
 
-		dbConn, dbcursor = dbConnection.dbConnect()
+		dbConn, dbcursor = self.dbConnect()
 		if globalVars.debugMode: print("Searching for: " + searchStr)
 		try:
 			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
@@ -60,10 +60,10 @@ class messageModel(globalVars):
 			self.__timestamp = ""
 			self.__index = ""
 			if globalVars.debugMode: print("Record Not Found")
-		dbConnection.dbClose(dbConn)
+		self.dbClose(dbConn)
 
 	def __lookupRecordFromIndex(self):  # READ
-		dbConn, dbcursor = dbConnection.dbConnect()
+		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.__index) + '"'
 
 		try:
@@ -83,26 +83,26 @@ class messageModel(globalVars):
 
 	def __saveRecord(self):  # UPDATE
 		if self.__index is None:
-			dbConn, dbcursor = dbConnection.dbConnect()
+			dbConn, dbcursor = self.dbConnect()
 			sqlStr = 'INSERT INTO messages ("message", "timestamp") VALUES' + \
 			         '("' + self.__messageTxt + '","' + str(self.__getTimeStampFromSystem()) + '");'
 
 			dbcursor.execute(sqlStr)
-			dbConnection.dbClose(dbConn)
+			self.dbClose(dbConn)
 		else:
-			dbConn, dbcursor = dbConnection.dbConnect()
+			dbConn, dbcursor = self.dbConnect()
 			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + \
 					str(self.__getTimeStampFromSystem()) + '"  WHERE "index" = "' + str(self.__index) + '";'
 			# TODO Add try and catch to SQL code
 			dbcursor.execute(sqlStr)
-			dbConnection.dbClose(dbConn)
+			self.dbClose(dbConn)
 
 	def deleteRecord(self):  # DELETE
-		dbConn, dbcursor = dbConnection.dbConnect()
+		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
 		if globalVars.debugMode: print("RECORD DELETED")
-		dbConnection.dbClose(dbConn)
+		self.dbClose(dbConn)
 
 	def searchForRecords(self, messageIn=None):
 		# FIXME Search for records with matching indexes

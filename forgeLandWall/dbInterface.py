@@ -1,16 +1,16 @@
 from forgeLandWall.settings import globalVars
-from dbConnManage import dbConnManage as dbConnection
+from dbConnManage import dbConnManage
 from models import messageModel
 import json
 
 __author__ = 'Jesse'
 
 
-class dbInterface():
+class dbInterface(dbConnManage):
 	@classmethod
 	def getBottomIndexes(cls, numberOfBottomIndexesToGet=1):
 		"""Gets X number of index values from the bottom of the message table"""
-		dbConn, dbcursor = dbConnection.dbConnect()
+		dbConn, dbcursor = cls.dbConnect()
 
 		dbcursor.execute('SELECT "index"FROM messages ORDER BY "index" DESC LIMIT ' + str(numberOfBottomIndexesToGet))
 		indexList = dbcursor.fetchall()
@@ -86,23 +86,23 @@ class dbInterface():
 		"""Searches the database and return a list of message pairs in list form"""
 		# TODO Maybe remove this or rewrite is when done with models.getMessagesFromDB
 		if messageIn is not None:
-			dbConn, dbcursor = dbConnection.dbConnect()
+			dbConn, dbcursor = cls.dbConnect()
 
 			sqlStr = 'SELECT "message","timestamp" FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
 			dbcursor.execute(sqlStr)
 			results = dbcursor.fetchall()
 
-			dbConnection.dbClose(dbConn)
+			cls.dbClose(dbConn)
 			return results
 		else:
 			return ""
 
 	@classmethod
 	def _clearMessageTable(cls):
-		dbConn, dbcursor = dbConnection.dbConnect()
+		dbConn, dbcursor = cls.dbConnect()
 		sqlStr = 'DELETE FROM messages;'
 		dbcursor.execute(sqlStr)
-		dbConnection.dbClose(dbConn)
+		cls.dbClose(dbConn)
 
 	@classmethod
 	def getDict(cls, obj):
