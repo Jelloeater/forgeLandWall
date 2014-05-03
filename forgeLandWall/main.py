@@ -42,7 +42,6 @@ class webHandler():
 			if path[1] == "delete"and pathLength <= 2:
 				return views.HTTP.GET_delete(self)
 			if path[1] == "raw"and pathLength >= 2:
-				print path[1]
 				return views.HTTP.rawPostInput(self)
 			else:
 				print('NOT FOUND')

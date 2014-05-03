@@ -51,10 +51,8 @@ class HTTP(HTMLHelper):
 
 
 		if request_body == "": # For GET's and empty POST's
-			# TODO Split string for amount
-			# TODO return RAW JSON
-
-			print(path[2])
+		# In order to get here, the path HAS to be long enough to look for a record
+		# NOTE: We are NOT re-splitting the path, just going off what we took from the main method
 			try:
 				output.append(POSTController.JSONTxt.getJSON(int(path[2])))
 			except:
@@ -65,6 +63,7 @@ class HTTP(HTMLHelper):
 			# request_body = POST Message
 			print('request Body')
 			print(request_body)
+			# TODO Create universal method for processing POST requests, a POST message splitter
 
 			if request_body == "create":
 				POSTController.postControl.createRecord("rawPOSTinput")
