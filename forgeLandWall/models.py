@@ -9,12 +9,11 @@ __author__ = 'Jesse'
 # Yes, I know we're all adults here, but I don't like getting suggestions for methods I don't need
 
 
-class messageModel(dbConnManage, globalVars):
+class messageModel(dbConnManage):
 	# Creates record handle OR reads record from db
 	"""Represents a SINGLE record from the table, we manipulate the objects, rather then SQL"""
 
 	def __init__(self, index=None, message=None):
-		globalVars.__init__(self)
 
 		self.__messageTxt = None
 		self.__timestamp = None

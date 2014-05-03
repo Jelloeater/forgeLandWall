@@ -1,10 +1,11 @@
-__author__ = 'Jesse'
-import POSTController
 import datetime
+from controler import webControl
+__author__ = 'Jesse'
+
 # TODO Think about moving to modules down the road maybe?
 
 
-class HTMLHelper():
+class HTMLHelper(webControl):
 	@staticmethod
 	def getHeader():
 		output = ['<pre>']
@@ -50,14 +51,15 @@ class HTTP(HTMLHelper):
 		print(path)
 		path = str(path)
 
-		if path is not "/":    path = path.split('/')
+		if path is not "/":
+			path = path.split('/')
 
 		if request_body == "":  # For GET's and empty POST's
 			# In order to get here, the path HAS to be long enough to look for a record
 			# NOTE: We are NOT re-splitting the path, just going off what we took from the main method
 			if path[2].isdigit():  # Why try and catch, when you can think and do?
 				numberToGet = int(path[2])
-				output.append(POSTController.JSONTxt.getJSON(numberToGet))
+				output.append(HTTP.getJSON(numberToGet))
 		else:  # We're getting a POST request
 			# request_body = POST Message
 			print('request Body')
@@ -65,7 +67,7 @@ class HTTP(HTMLHelper):
 			# TODO Create universal method for processing POST requests, a POST message splitter
 
 			if request_body == "create":
-				POSTController.postControl.createRecord("rawPOSTinput")
+				HTTP.createRecord("rawPOSTinput")
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
