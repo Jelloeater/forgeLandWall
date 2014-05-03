@@ -21,7 +21,7 @@ class TestMessageModel(TestCase):
 		from forgeLandWall.dbConnManage import dbConnManage
 
 		dbConn, dbcursor = dbConnManage.dbConnect()
-		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "' + TestMessageModel.messageStr + '";'
+		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "%' + TestMessageModel.messageStr + '%";'
 		dbcursor.execute(sqlStr)
 		dbConnManage.dbClose(dbConn)
 		print("TEST TEARDOWN")
@@ -78,10 +78,18 @@ class TestMessageModel(TestCase):
 	def test_searchForRecords(self):
 		""""Search for many records containing string"""
 		# Setup records
+		testMsg1 = TestMessageModel.messageStr+"timmy1"
+		testMsg2 = TestMessageModel.messageStr+"jimmy2"
+
 		dbObj = models.messageModel()
-		dbObj.message(TestMessageModel.messageStr+"timmy")
+		dbObj.message(testMsg1)
+		dbObj3 = models.messageModel(message=testMsg1)  # tim
+		msgOut1 = dbObj3.message()
+
 		dbObj2 = models.messageModel()
-		dbObj2.message(TestMessageModel.messageStr+"jimmy")
+		dbObj2.message(testMsg2)
+		dbObj4 = models.messageModel(message=testMsg2)  # jim
+		msgOut2 = dbObj4.message()
 
-
-		self.fail(msg="Record not found")
+		self.assertEqual(testMsg1,msgOut1)
+		self.assertEqual(testMsg2, msgOut2)
