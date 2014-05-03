@@ -25,6 +25,7 @@ class webHandler():
 
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
+		print('PATH: ')
 		print(path)
 		path = str(path)
 
@@ -36,8 +37,10 @@ class webHandler():
 			pathLength = len(path)
 			print(pathLength)
 
-			if path[1] == "hi"and pathLength <= 2:
-				return views.HTTP.GET_hi(self)
+			if path[1] == "edit"and pathLength <= 2:
+				return views.HTTP.GET_edit(self)
+			if path[1] == "delete"and pathLength <= 2:
+				return views.HTTP.GET_delete(self)
 			if path[1] == "rawJSON"and pathLength <= 2:
 				# TODO Split string for amount
 				return views.JSONTxt.getJSON(self)
@@ -45,8 +48,8 @@ class webHandler():
 				return views.HTTP.notFound(self)
 		else:
 			return views.HTTP.GET_MainIndex(self)
-		# /         Create
-		# /update   update
+		# root      Create
+		# /edit   update
 		# /delete   delete
 		# FIXME Add specific pages for tasks
 

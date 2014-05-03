@@ -12,7 +12,7 @@ class HTMLHelper():
 	def getHeader():
 		output = ['<pre>']
 		# TODO Add header
-		output.append("HEADER!")
+		output.append("HEADER")
 		return output
 
 	@staticmethod
@@ -88,8 +88,8 @@ class HTTP(HTMLHelper):
 		yield ''.join(output)
 
 	@staticmethod
-	def GET_hi(self):
-		output = ['']
+	def GET_edit(self):
+		output = HTMLHelper.getHeader()
 		output.append('hi')
 
 		output_len = sum(len(line) for line in output)
@@ -106,3 +106,16 @@ class HTTP(HTMLHelper):
 		response_headers = [('Content-type', 'text/plain')]
 		self.start(status, response_headers)
 		yield "Not Found\n"
+
+	@staticmethod
+	def GET_delete(self):
+		output = HTMLHelper.getHeader()
+		output.append('hi')
+
+		output_len = sum(len(line) for line in output)
+
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+
+		yield ''.join(output)
