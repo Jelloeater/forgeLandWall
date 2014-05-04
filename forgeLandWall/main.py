@@ -22,30 +22,24 @@ class webHandler():
 
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
-		print('PATH: ')
-		print(path)
 		path = str(path)
 
 		if path is not "/":
 			path = path.split('/')
-			print(path[0])
-			print(path[1])
-			# print(path[2])
-			pathLength = len(path)
-			print(pathLength)
 
-			if path[1] == "edit"and pathLength <= 2:
+			if path[1] == "edit" and len(path) <= 2:
 				return views.HTTP.GET_edit(self)
-			if path[1] == "delete"and pathLength <= 2:
+			if path[1] == "delete" and len(path) <= 2:
 				return views.HTTP.GET_delete(self)
-			if path[1] == "raw"and pathLength >= 2:
-				return views.HTTP.rawPostInput(self)
+			if path[1] == "raw" and len(path) >= 3 and path[2].isdigit():  # GET POSTS
+				return views.JSON.getMessages(self)
+			if path[1] == "raw" and len(path) >= 2:  # PUT POSTS
+				return views.JSON.putMessages(self)
 			else:
 				print('NOT FOUND')
 				print path[1]
 				return views.HTTP.notFound(self)
 		else:
-			print('hi')
 			return views.HTTP.GET_MainIndex(self)
 
 		# root      Create

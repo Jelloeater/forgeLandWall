@@ -1,5 +1,6 @@
 import datetime
 from controler import webControl
+
 __author__ = 'Jesse'
 
 # TODO Think about moving to modules down the road maybe?
@@ -34,10 +35,44 @@ class HTMLHelper(webControl):
 		# TODO Add footer
 		return output
 
+	@classmethod
+	def postSplitter(cls, requestBody):
+		"""Splits POST request and sends to correct method"""
+		# requestBody = POST Message
+		# TODO Create universal method for processing POST requests, a POST message splitter
+		print('postSplitter')
+		print(locals())
+		# cls.createRecord()
 
-class HTTP(HTMLHelper):
-	@staticmethod
-	def rawPostInput(self):
+
+class JSON(HTMLHelper):
+	@classmethod
+	def getMessages(cls, self):
+		"""Handles all text JSON GET requests
+		GETS should be in the format server/raw/numberOfPostsToGetViaJSON"""
+		output = ['']
+
+		path = self.environ['PATH_INFO']
+		path = str(path)
+		if path is not "/":	path = path.split('/')
+
+		# MAIN PROCESSING HERE!
+
+		numberToGet = int(path[2])
+		output.append(HTTP.getJSON(numberToGet))
+
+		# MAIN PROCESSING DONE!
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		# TODO Add query output?
+		yield ''.join(output)
+
+	@classmethod
+	def putMessages(cls, self):
+		"""Handles all text JSON PUT requests
+		PUT should be in the format create=x, edit=x, delete=x """
 		output = ['']
 
 		try:
@@ -46,29 +81,12 @@ class HTTP(HTMLHelper):
 			request_body_size = 0
 		request_body = self.environ['wsgi.input'].read(request_body_size)
 
-		path = self.environ['PATH_INFO']
-		print('PATH: ')
-		print(path)
-		path = str(path)
 
-		if path is not "/":
-			path = path.split('/')
+		cls.postSplitter(request_body)
+		output.append('Request Received')
 
-		if request_body == "":  # For GET's and empty POST's
-			# In order to get here, the path HAS to be long enough to look for a record
-			# NOTE: We are NOT re-splitting the path, just going off what we took from the main method
-			if path[2].isdigit():  # Why try and catch, when you can think and do?
-				numberToGet = int(path[2])
-				output.append(HTTP.getJSON(numberToGet))
-		else:  # We're getting a POST request
-			# request_body = POST Message
-			print('request Body')
-			print(request_body)
-			# TODO Create universal method for processing POST requests, a POST message splitter
 
-			if request_body == "create":
-				HTTP.createRecord("rawPOSTinput")
-
+		# MAIN PROCESSING DONE!
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
@@ -76,6 +94,9 @@ class HTTP(HTMLHelper):
 		# TODO Add query output?
 		yield ''.join(output)
 
+
+class HTTP(HTMLHelper):
+	"""Handles all web and text requests over HTTP"""
 	@staticmethod
 	def GET_MainIndex(self):
 		""" HTML for create new message view + POST controller"""
@@ -85,7 +106,7 @@ class HTTP(HTMLHelper):
 
 		# command=create&input=someTextHere
 		# If we detect input, do this
-		# TODO call rawPostInput HERE?
+		# TODO call getMessages HERE?
 		if self.environ['REQUEST_METHOD'] == 'POST':
 			try:
 				request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
