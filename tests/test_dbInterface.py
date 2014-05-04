@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from forgeLandWall import dbInterface
+from forgeLandWall.controler import dbInterface
 
 
 __author__ = 'Jesse'
@@ -36,7 +36,7 @@ class TestDbInterface(TestCase):
 	def test_getMessagesFromDBasJSONObjectArray(self):
 		import json
 
-		retPut = dbInterface.dbInterface.getMessagesFromDBasJSONObjectArray(3)
+		retPut = dbInterface.getMessagesFromDBasJSONObjectArray(3)
 		# Get the Data from the db
 
 		objList = json.loads(retPut)
@@ -49,7 +49,7 @@ class TestDbInterface(TestCase):
 
 
 	def test_searchMessagesFromDB(self):
-		results = dbInterface.dbInterface.searchMessagesFromDB("json")
+		results = dbInterface.searchMessagesFromDB("json")
 		x = results[2]
 
 		self.assertEqual(x[0], "json3")

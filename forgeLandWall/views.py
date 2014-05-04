@@ -3,8 +3,6 @@ from controler import webControl
 
 __author__ = 'Jesse'
 
-# TODO Think about moving to modules down the road maybe?
-
 
 class JSON(webControl):
 	@classmethod
@@ -43,8 +41,6 @@ class JSON(webControl):
 		cls.postSplitter(request_body)
 		output.append('Request Received')
 
-
-		# MAIN PROCESSING DONE!
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
@@ -85,6 +81,7 @@ class HTMLHelper(webControl):
 
 class HTTP(HTMLHelper):
 	"""Handles all web and text requests over HTTP"""
+	# FIXME Change static methods to class methods
 	@staticmethod
 	def GET_MainIndex(self):
 		""" HTML for create new message view + POST controller"""
@@ -94,7 +91,6 @@ class HTTP(HTMLHelper):
 
 		# command=create&input=someTextHere
 		# If we detect input, do this
-		# TODO call getMessages HERE?
 		if self.environ['REQUEST_METHOD'] == 'POST':
 			try:
 				request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
@@ -102,7 +98,7 @@ class HTTP(HTMLHelper):
 				request_body_size = 0
 
 			request_body = self.environ['wsgi.input'].read(request_body_size)
-			# FIXME Call POSTcontroller
+			# FIXME Call Controller.webControl.POSTSplitter
 			print(request_body)
 			# TODO If POST = update
 			# show form data as received by POST:
@@ -123,6 +119,22 @@ class HTTP(HTMLHelper):
 		output = HTMLHelper.getForm("edit", output)
 
 		output = HTMLHelper.getFooter(output)
+
+		# FIXME Call Controller.webControl.POSTSplitter
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		yield ''.join(output)
+
+	@staticmethod
+	def GET_delete(self):
+		output = HTMLHelper.getHeader()
+
+		output = HTMLHelper.getForm("delete", output)
+
+		output = HTMLHelper.getFooter(output)
+		# FIXME Call Controller.webControl.POSTSplitter
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
@@ -135,16 +147,3 @@ class HTTP(HTMLHelper):
 		response_headers = [('Content-type', 'text/plain')]
 		self.start(status, response_headers)
 		yield "Not Found\n"
-
-	@staticmethod
-	def GET_delete(self):
-		output = HTMLHelper.getHeader()
-
-		output = HTMLHelper.getForm("delete", output)
-
-		output = HTMLHelper.getFooter(output)
-		output_len = sum(len(line) for line in output)
-		status = '200 OK'
-		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
-		self.start(status, response_headers)
-		yield ''.join(output)

@@ -16,6 +16,11 @@ def main():
 
 
 class webHandler():
+	"""
+	root      Create
+	/edit     update
+	/delete   delete
+	"""
 	def __init__(self, environ, start_response):
 		self.environ = environ
 		self.start = start_response
@@ -33,7 +38,7 @@ class webHandler():
 				return views.HTTP.GET_delete(self)
 			if path[1] == "raw" and len(path) >= 3 and path[2].isdigit():  # GET POSTS| /raw/9000
 				return views.JSON.getMessages(self)
-			if path[1] == "raw" and len(path) <= 2:  # PUT POSTS| /raw [POST][create=x]
+			if path[1] == "raw" and len(path) <= 2:  # PUT POSTS| /raw [POST][create=x, delete=x]
 				return views.JSON.putMessages(self)
 			else:
 				print('NOT FOUND')
@@ -41,11 +46,6 @@ class webHandler():
 				return views.HTTP.notFound(self)
 		else:
 			return views.HTTP.GET_MainIndex(self)
-
-		# root      Create
-		# /edit   update
-		# /delete   delete
-		# FIXME Add specific pages for tasks
 
 if __name__ == "__main__":  # Runs Script
 	main()
