@@ -6,6 +6,53 @@ __author__ = 'Jesse'
 # TODO Think about moving to modules down the road maybe?
 
 
+class JSON(webControl):
+	@classmethod
+	def getMessages(cls, self):
+		"""Handles all text JSON GET requests
+		GETS should be in the format server/raw/numberOfPostsToGetViaJSON"""
+		output = ['']
+
+		path = self.environ['PATH_INFO']
+		path = str(path)
+		if path is not "/":	path = path.split('/')
+
+		# MAIN PROCESSING HERE!
+		numberToGet = int(path[2])
+		output.append(cls.getJSON(numberToGet))  # Calls controller
+
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		# TODO Add query output?
+		yield ''.join(output)
+
+	@classmethod
+	def putMessages(cls, self):
+		"""Handles all text JSON PUT requests
+		PUT should be in the format create=x, edit=x, delete=x """
+		output = ['']
+
+		try:
+			request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+		except ValueError:
+			request_body_size = 0
+		request_body = self.environ['wsgi.input'].read(request_body_size)
+
+		cls.postSplitter(request_body)
+		output.append('Request Received')
+
+
+		# MAIN PROCESSING DONE!
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		# TODO Add query output?
+		yield ''.join(output)
+
+
 class HTMLHelper(webControl):
 	@staticmethod
 	def getHeader():
@@ -34,65 +81,6 @@ class HTMLHelper(webControl):
 		output.append('<hr>Retrieved @ ' + str(datetime.datetime.now().replace(microsecond=0)))
 		# TODO Add footer
 		return output
-
-	@classmethod
-	def postSplitter(cls, requestBody):
-		"""Splits POST request and sends to correct method"""
-		# requestBody = POST Message
-		# TODO Create universal method for processing POST requests, a POST message splitter
-		print('postSplitter')
-		print(locals())
-		# cls.createRecord()
-
-
-class JSON(HTMLHelper):
-	@classmethod
-	def getMessages(cls, self):
-		"""Handles all text JSON GET requests
-		GETS should be in the format server/raw/numberOfPostsToGetViaJSON"""
-		output = ['']
-
-		path = self.environ['PATH_INFO']
-		path = str(path)
-		if path is not "/":	path = path.split('/')
-
-		# MAIN PROCESSING HERE!
-
-		numberToGet = int(path[2])
-		output.append(HTTP.getJSON(numberToGet))
-
-		# MAIN PROCESSING DONE!
-		output_len = sum(len(line) for line in output)
-		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
-		self.start(status, response_headers)
-		# TODO Add query output?
-		yield ''.join(output)
-
-	@classmethod
-	def putMessages(cls, self):
-		"""Handles all text JSON PUT requests
-		PUT should be in the format create=x, edit=x, delete=x """
-		output = ['']
-
-		try:
-			request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
-		except ValueError:
-			request_body_size = 0
-		request_body = self.environ['wsgi.input'].read(request_body_size)
-
-
-		cls.postSplitter(request_body)
-		output.append('Request Received')
-
-
-		# MAIN PROCESSING DONE!
-		output_len = sum(len(line) for line in output)
-		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
-		self.start(status, response_headers)
-		# TODO Add query output?
-		yield ''.join(output)
 
 
 class HTTP(HTMLHelper):

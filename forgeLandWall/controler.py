@@ -32,3 +32,12 @@ class webControl(messageModel):
 	@staticmethod
 	def getJSON(numberToGet=1):
 		return dbInterface.getMessagesFromDBasJSONObjectArray(numberToGet)
+
+
+	@classmethod
+	def postSplitter(cls, requestBody):
+		"""Splits POST request and sends to correct method"""
+		# requestBody = POST Message
+		# TODO Create universal method for processing POST requests, a POST message splitter
+		print('postSplitter')
+		print(locals())

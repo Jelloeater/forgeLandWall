@@ -31,9 +31,9 @@ class webHandler():
 				return views.HTTP.GET_edit(self)
 			if path[1] == "delete" and len(path) <= 2:
 				return views.HTTP.GET_delete(self)
-			if path[1] == "raw" and len(path) >= 3 and path[2].isdigit():  # GET POSTS
+			if path[1] == "raw" and len(path) >= 3 and path[2].isdigit():  # GET POSTS| /raw/9000
 				return views.JSON.getMessages(self)
-			if path[1] == "raw" and len(path) >= 2:  # PUT POSTS
+			if path[1] == "raw" and len(path) <= 2:  # PUT POSTS| /raw [POST][create=x]
 				return views.JSON.putMessages(self)
 			else:
 				print('NOT FOUND')
