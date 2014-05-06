@@ -15,12 +15,9 @@ class messageModel(dbConnManage):
 
 	def __init__(self, index=None, message=None):
 
-
 		if index is None and message is None:
 			self.__index = None
 
-		if message is not None and index is None:
-			self.__lookupRecordFromMessage(message)
 		if index is not None and message is None:
 			# Index should still be used for edits and delete though
 			self.__index = index
@@ -37,27 +34,6 @@ class messageModel(dbConnManage):
 
 	def getTimestamp(self):
 		return self.__timestamp
-
-	def __lookupRecordFromMessage(self, searchStr):
-		"""Looks up ONLY the FIRST record that matches the search"""
-
-		dbConn, dbcursor = self.dbConnect()
-		if globalVars.debugMode: print("Searching for: " + searchStr)
-		try:
-			sqlStr = 'SELECT * FROM messages WHERE message LIKE"%' + searchStr + '%"'
-			dbcursor.execute(sqlStr)
-			record = dbcursor.fetchone()
-			self.__messageTxt = record[0]
-			self.__timestamp = record[1]
-			self.__index = record[2]
-			if globalVars.debugMode: print("Record Found: " + searchStr)
-		except TypeError:
-			# FIXME Add better exception, no Pokemon exceptions!
-			self.__messageTxt = "CANNOT FIND MESSAGE: " + searchStr
-			self.__timestamp = ""
-			self.__index = ""
-			if globalVars.debugMode: print("Record Not Found")
-		self.dbClose(dbConn)
 
 	def __lookupRecordFromIndex(self):  # READ
 		dbConn, dbcursor = self.dbConnect()
