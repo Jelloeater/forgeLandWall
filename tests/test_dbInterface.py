@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from forgeLandWall import dbInterface
+from forgeLandWall.controler import dbInterface
 
 
 __author__ = 'Jesse'
@@ -25,7 +25,7 @@ class TestDbInterface(TestCase):
 
 	def tearDown(self):
 		"""Delete test messages"""
-		import forgeLandWall.dbConnManage as dbConnManage
+		from forgeLandWall.dbConnManage import dbConnManage
 		dbConn, dbcursor = dbConnManage.dbConnect()
 		messageStr = "json"
 		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "%' + messageStr + '%";'
@@ -45,11 +45,11 @@ class TestDbInterface(TestCase):
 		json3str = objDict['message']
 		# Pull key value from dict
 
-		self.assertEquals(json3str,"json3","JSON Mismatch")
+		self.assertEquals(json3str, "json3", "JSON Mismatch")
 
 
 	def test_searchMessagesFromDB(self):
 		results = dbInterface.searchMessagesFromDB("json")
 		x = results[2]
 
-		self.assertEqual(x[0],"json3")
+		self.assertEqual(x[0], "json3")

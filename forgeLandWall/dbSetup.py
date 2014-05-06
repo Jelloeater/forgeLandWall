@@ -1,13 +1,12 @@
 import os
 from forgeLandWall.settings import globalVars
-import forgeLandWall.dbConnManage as dbConnection
-
+from forgeLandWall.dbConnManage import dbConnManage as dbConnection
 
 __author__ = 'Jesse'
 
 
 def setupDB():
-	"""Initialize the database if it does not exist yet"""
+	"""	Initialize the database if it does not exist yet"""
 	if not os.path.isfile(globalVars.dbPath):
 		if globalVars.debugMode: print("Database Missing")
 		dbConn, dbcursor = dbConnection.dbConnect()
