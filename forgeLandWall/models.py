@@ -1,6 +1,6 @@
 import datetime
-from forgeLandWall.dbConnManage import dbConnManage
 
+from forgeLandWall.dbConnManage import dbConnManage
 from forgeLandWall.settings import globalVars
 
 
@@ -77,11 +77,6 @@ class messageModel(dbConnManage):
 		if globalVars.debugMode: print("RECORD DELETED")
 		self.dbClose(dbConn)
 
-	def searchForRecords(self, messageIn=None):
-		# FIXME Search for records with matching indexes
-		# FIXME Return object array of matching records
-
-		pass
 
 	@staticmethod
 	def __getTimeStampFromSystem():

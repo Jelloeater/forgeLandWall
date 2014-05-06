@@ -83,7 +83,11 @@ class dbInterface(messageModel):
 
 	@classmethod
 	def searchMessagesFromDB(cls, messageIn=None):
-		"""Searches the database and return a list of message pairs in list form"""
+		"""
+		Searches the database and return a list of message pairs in list form
+		This is a raw text search, it is NOT for altering anything, it's just so the user can get
+		simple query results
+		"""
 		# TODO Maybe remove this or rewrite is when done with models.getMessagesFromDB
 		if messageIn is not None:
 			dbConn, dbcursor = cls.dbConnect()
@@ -139,13 +143,35 @@ class webControl(dbInterface):
 	def createRecord(cls, messageIn=None):
 		x = messageModel()
 		x.message(message=messageIn)
-	# TODO 1) Search for record index 2) update records (for loop)
-	# TODO write delete call
 
 	@classmethod
 	def updateRecords(cls, messageIn=None):
+		# TODO 1) Search for record index
+		# TODO 2) update records (for loop)
 		pass
 
 	@classmethod
 	def deleteRecords(cls, messageIn=None):
+		# TODO 1) Search for record index
+		# TODO 2) delete records (for loop)
 		pass
+
+	@classmethod
+	def searchForRecordsIndex(cls, messageIn):
+		"""
+		Returns list of message index's matching search string
+		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
+		"""
+		# FIXME Write test for this method! *** WORK ON THIS NEXT!***
+		dbConn, dbcursor = cls.dbConnect()
+		sqlStr = 'SELECT index FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
+		indexList = None
+		try:
+			dbcursor.execute(sqlStr)
+			indexList = dbcursor.fetchall()
+			if globalVars.debugMode: print("Looked up record")
+		except TypeError:
+			if globalVars.debugMode: print("Record does not exist")
+
+		dbConn.close()
+		return indexList
