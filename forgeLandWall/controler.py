@@ -120,6 +120,10 @@ class empty():
 
 
 class webControl(dbInterface):
+	"""
+	Provides methods to work with POST, JSON and CRUD db operations
+	Works on the model INDIRECTLY
+	"""
 	@classmethod
 	def getJSON(cls, numberToGet=1):
 		return cls.getMessagesFromDBasJSONObjectArray(numberToGet)
@@ -162,16 +166,20 @@ class webControl(dbInterface):
 		Returns list of message index's matching search string
 		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
 		"""
-		# FIXME Write test for this method! *** WORK ON THIS NEXT!***
 		dbConn, dbcursor = cls.dbConnect()
-		sqlStr = 'SELECT index FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
+		sqlStr = 'SELECT "index" FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
 		indexList = None
 		try:
 			dbcursor.execute(sqlStr)
 			indexList = dbcursor.fetchall()
+			listOut = []
+			for x in indexList:
+				listOut.append(x[0])
+			indexList = listOut
+			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
 			if globalVars.debugMode: print("Looked up record")
 		except TypeError:
 			if globalVars.debugMode: print("Record does not exist")
-
+		print(indexList)
 		dbConn.close()
 		return indexList

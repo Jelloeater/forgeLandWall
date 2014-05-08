@@ -13,13 +13,12 @@ class messageModel(dbConnManage):
 	# Creates record handle OR reads record from db
 	"""Represents a SINGLE record from the table, we manipulate the objects, rather then SQL"""
 
-	def __init__(self, index=None, message=None):
+	def __init__(self, index=None):
 
-		if index is None and message is None:
+		if index is None:
 			self.__index = None
-
-		if index is not None and message is None:
-			# Index should still be used for edits and delete though
+		else:
+			# Index should be used for edits and delete though
 			self.__index = index
 			self.__lookupRecordFromIndex()
 			if globalVars.debugMode: print("Record Found")
@@ -81,3 +80,12 @@ class messageModel(dbConnManage):
 	@staticmethod
 	def __getTimeStampFromSystem():
 		return datetime.datetime.now().replace(microsecond=0)
+
+	@classmethod
+	def doesRecordExist(cls, indexIn):
+		dbConn, dbcursor = cls.dbConnect()
+		sqlStr = 'SELECT * FROM messages where "index" = "' + str(indexIn) + '"'
+		dbcursor.execute(sqlStr)
+		record = dbcursor.fetchone()
+		cls.dbClose(dbConn)
+		# FIXME Add return flag and parsing logic

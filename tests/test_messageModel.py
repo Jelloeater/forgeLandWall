@@ -2,10 +2,11 @@ __author__ = 'Jesse'
 from unittest import TestCase
 import forgeLandWall.models as models
 import os
+import constants
 
 
 class TestMessageModel(TestCase):
-	messageStr = "testMessagePleaseIgnore"
+	messageStr = constants.messageStr
 
 	def setUp(self):
 		"""Go-to project root so we can access the database"""
@@ -27,6 +28,7 @@ class TestMessageModel(TestCase):
 		print("TEST TEARDOWN")
 
 	def test_message(self):
+		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		# Write
 
 		dbObj = models.messageModel()
@@ -34,11 +36,13 @@ class TestMessageModel(TestCase):
 
 		# Search and read back
 		dbObj2 = models.messageModel(message=TestMessageModel.messageStr)
+
 		dbMessageStr = dbObj2.message()
 
 		self.assertEquals(dbMessageStr, TestMessageModel.messageStr)
 
 	def test_deleteRecord(self):
+		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		# Create message
 		dbObj1 = models.messageModel()
 		dbObj1.message(TestMessageModel.messageStr)
@@ -55,6 +59,7 @@ class TestMessageModel(TestCase):
 
 
 	def test_missingRecordMessage(self):
+		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		# Looks up message that shouldn't exist
 		messageToTest = "someMissingMessage"
 		dbOjb1 = models.messageModel(message=messageToTest)
@@ -76,10 +81,11 @@ class TestMessageModel(TestCase):
 
 
 	def test_searchForRecords(self):
+		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		""""Search for many records containing string"""
 		# Setup records
-		testMsg1 = TestMessageModel.messageStr+"timmy1"
-		testMsg2 = TestMessageModel.messageStr+"jimmy2"
+		testMsg1 = TestMessageModel.messageStr + "timmy1"
+		testMsg2 = TestMessageModel.messageStr + "jimmy2"
 
 		dbObj = models.messageModel()
 		dbObj.message(testMsg1)
@@ -91,5 +97,19 @@ class TestMessageModel(TestCase):
 		dbObj4 = models.messageModel(message=testMsg2)  # jim
 		msgOut2 = dbObj4.message()
 
-		self.assertEqual(testMsg1,msgOut1)
+		self.assertEqual(testMsg1, msgOut1)
 		self.assertEqual(testMsg2, msgOut2)
+
+
+	def test_doesRecordExist(self):
+		# FIXME Finish writing doesRecordExist test
+		searchFlag = False
+		# Create
+		testMsg = TestMessageModel.messageStr + "exist"
+		dbObj = models.messageModel()
+		dbObj.message(testMsg)
+
+		# Search
+
+		# Compare
+		self.assertTrue(searchFlag)
