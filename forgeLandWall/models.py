@@ -85,7 +85,12 @@ class messageModel(dbConnManage):
 	def doesRecordExist(cls, indexIn):
 		dbConn, dbcursor = cls.dbConnect()
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(indexIn) + '"'
-		dbcursor.execute(sqlStr)
-		record = dbcursor.fetchone()
-		cls.dbClose(dbConn)
-		# FIXME Add return flag and parsing logic
+		flag = False
+		try:
+			dbcursor.execute(sqlStr)
+			if dbcursor.fetchone() is not None:
+				flag = True
+		except TypeError:
+			if globalVars.debugMode: print("Record does not exist")
+		dbConn.close()
+		return flag

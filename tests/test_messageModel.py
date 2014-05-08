@@ -1,6 +1,7 @@
 __author__ = 'Jesse'
 from unittest import TestCase
 import forgeLandWall.models as models
+from forgeLandWall.controler import webControl, dbInterface
 import os
 import constants
 
@@ -108,8 +109,7 @@ class TestMessageModel(TestCase):
 		testMsg = TestMessageModel.messageStr + "exist"
 		dbObj = models.messageModel()
 		dbObj.message(testMsg)
-
 		# Search
-
+		list = webControl.searchForRecordsIndex(testMsg)
 		# Compare
-		self.assertTrue(searchFlag)
+		self.assertTrue(models.messageModel.doesRecordExist(list[0]))
