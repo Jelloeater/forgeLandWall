@@ -69,19 +69,19 @@ class HTMLHelper(webControl):
 			output.append('<form method="post">CREATE<input type="text" name="delete"><input type="submit"></form>')
 		return output
 
-	@staticmethod
-	def getFooter(outputIn):
-		output = outputIn
+	@classmethod
+	def getMessages(cls, output):
+		msgList = cls.getMessagesFromDB()
 
+	@staticmethod
+	def getFooter(output):
 		str(datetime.datetime.now().replace(microsecond=0))
 		output.append('<hr>Retrieved @ ' + str(datetime.datetime.now().replace(microsecond=0)))
-		# TODO Add footer
 		return output
 
 
 class HTTP(HTMLHelper):
 	"""Handles all web and text requests over HTTP"""
-	# FIXME Change static methods to class methods
 	@staticmethod
 	def GET_MainIndex(self):
 		""" HTML for create new message view + POST controller"""

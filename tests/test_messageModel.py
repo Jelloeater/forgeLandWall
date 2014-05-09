@@ -2,6 +2,7 @@ __author__ = 'Jesse'
 from unittest import TestCase
 import forgeLandWall.models as models
 from forgeLandWall.controler import webControl
+from forgeLandWall.dbConnManage import dbConnManage
 import os
 import constants
 
@@ -17,8 +18,6 @@ class TestMessageModel(TestCase):
 
 	def tearDown(self):
 		"""Delete test messages"""
-		from forgeLandWall.dbConnManage import dbConnManage
-
 		dbConn, dbcursor = dbConnManage.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "%' + TestMessageModel.messageStr + '%";'
 		dbcursor.execute(sqlStr)
@@ -26,9 +25,7 @@ class TestMessageModel(TestCase):
 		print("TEST TEARDOWN")
 
 	def test_message(self):
-		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		# Write
-
 		dbObj = models.messageModel()
 		dbObj.message(TestMessageModel.messageStr)
 
@@ -41,7 +38,6 @@ class TestMessageModel(TestCase):
 		self.assertEquals(dbMessageStr, TestMessageModel.messageStr)
 
 	def test_deleteRecord(self):
-		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		# Create message
 		dbObj1 = models.messageModel()
 		dbObj1.message(TestMessageModel.messageStr)
@@ -64,16 +60,15 @@ class TestMessageModel(TestCase):
 		dbOjb1 = models.messageModel(x * -1)
 		messageStr = dbOjb1.message()
 		testStr = "CANNOT FIND MESSAGE @ INDEX" + str(x * -1)
-
 		self.assertEqual(messageStr, testStr)
 
 	def test_doesRecordExist(self):
-		# FIXME Finish writing doesRecordExist test
 		searchFlag = False
 		# Create
 		testMsg = TestMessageModel.messageStr + "exist"
 		dbObj = models.messageModel()
 		dbObj.message(testMsg)
+
 		# Search
 		indexList = webControl.searchForRecordsIndex(testMsg)
 		# Compare
