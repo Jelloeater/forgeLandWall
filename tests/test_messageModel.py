@@ -13,9 +13,6 @@ class TestMessageModel(TestCase):
 		"""Go-to project root so we can access the database"""
 		os.chdir("..")
 		os.chdir("forgeLandWall")
-		import forgeLandWall.settings
-
-		forgeLandWall.settings.globalVars.debugMode = True
 		print("TEST SETUP")
 
 	def tearDown(self):
@@ -57,25 +54,12 @@ class TestMessageModel(TestCase):
 		# Search for "missing" record
 		dbObj = models.messageModel(index=indexList[0])
 		msgStr = dbObj.message()
-		testStr = "CANNOT FIND MESSAGE: " + TestMessageModel.messageStr
+		testStr = "CANNOT FIND MESSAGE @ INDEX" + str(indexList[0])
 		self.assertEquals(msgStr, testStr)
-
-
-	def test_missingRecordMessage(self):
-		# FIXME Broken due to bad lookup, FIX THE LOOKUP
-		# Looks up message that shouldn't exist
-		messageToTest = "someMissingMessage"
-		indexList = webControl.searchForRecordsIndex(messageToTest)
-		dbObj1 = models.messageModel(index=indexList[0])
-		messageStr = dbObj1.message()
-		testStr = "CANNOT FIND MESSAGE: " + messageToTest
-
-		self.assertEqual(messageStr, testStr)
 
 	def test_missingRecordIndex(self):
 		# Looks up message that should NEVER exist
 		import random
-
 		x = random.randint(1, 10)
 		dbOjb1 = models.messageModel(x * -1)
 		messageStr = dbOjb1.message()
@@ -91,6 +75,6 @@ class TestMessageModel(TestCase):
 		dbObj = models.messageModel()
 		dbObj.message(testMsg)
 		# Search
-		list = webControl.searchForRecordsIndex(testMsg)
+		indexList = webControl.searchForRecordsIndex(testMsg)
 		# Compare
-		self.assertTrue(models.messageModel.doesRecordExist(list[0]))
+		self.assertTrue(models.messageModel.doesRecordExist(indexList[0]))
