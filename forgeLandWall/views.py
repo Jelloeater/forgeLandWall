@@ -1,5 +1,6 @@
 import datetime
 from forgeLandWall.controler import webControl
+from forgeLandWall.models import messageModel
 
 __author__ = 'Jesse'
 
@@ -71,7 +72,20 @@ class HTMLHelper(webControl):
 
 	@classmethod
 	def getMessages(cls, output):
+		""" Adds all messages to the HTML output for display"""
+		output.append("<br>")
 		msgList = cls.getMessagesFromDB()
+		for x in msgList:
+			message = messageModel.message(x)
+			timeStamp = messageModel.getTimestamp(x)
+			# Cannot use cls.message to call, it needs to directly access its associated class
+			print(message)
+			print(timeStamp)
+			output.append(message)
+			output.append(timeStamp)
+			output.append("<br>")
+
+		return output
 
 	@staticmethod
 	def getFooter(output):
@@ -88,6 +102,7 @@ class HTTP(HTMLHelper):
 		output = HTMLHelper.getHeader()
 
 		output = HTMLHelper.getForm("create", output)
+		output = HTMLHelper.getMessages(output)
 
 		# command=create&input=someTextHere
 		# If we detect input, do this

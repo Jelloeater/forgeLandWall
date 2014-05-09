@@ -15,11 +15,11 @@ class TestDbInterface(TestCase):
 
 		import forgeLandWall.models as models
 
-		x=models.messageModel()
+		x = models.messageModel()
 		x.message("json1")
-		x=models.messageModel()
+		x = models.messageModel()
 		x.message("json2")
-		x=models.messageModel()
+		x = models.messageModel()
 		x.message("json3")
 		print("TEST SETUP")
 

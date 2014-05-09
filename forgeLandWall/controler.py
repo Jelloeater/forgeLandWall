@@ -41,7 +41,7 @@ class dbInterface(messageModel):
 		dbConn.close()
 
 		if indexList is None:  # If the column is empty
-			return [1]
+			return [0]
 		else:
 			return indexList
 
@@ -53,17 +53,22 @@ class dbInterface(messageModel):
 		@rtype : list
 		"""
 		# TODO default search returns all
-		indexList = cls.getBottomIndexes(numberToGet)
-		indexList.reverse()
 		msgList = []
-		for index in indexList:
-			index = str(index)
-			index = index.strip('(),')
-			msg = messageModel(index)
-			msgList.append(msg)
-
-			if globalVars.debugMode:
-				print(msg.message() + msg.getTimestamp())
+		if numberToGet == 0:
+			indexList = cls.searchForRecordsIndex("")
+			for index in indexList:
+				index = str(index)
+				index = index.strip('(),')
+				msg = messageModel(index)
+				msgList.append(msg)
+		else:
+			indexList = cls.getBottomIndexes(numberToGet)
+			indexList.reverse()
+			for index in indexList:
+				index = str(index)
+				index = index.strip('(),')
+				msg = messageModel(index)
+				msgList.append(msg)
 
 		return msgList
 
