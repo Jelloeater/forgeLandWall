@@ -1,7 +1,7 @@
 __author__ = 'Jesse'
 from unittest import TestCase
 import forgeLandWall.models as models
-from forgeLandWall.controler import webControl, dbInterface
+from forgeLandWall.controler import webControl
 import os
 import constants
 
@@ -36,7 +36,8 @@ class TestMessageModel(TestCase):
 		dbObj.message(TestMessageModel.messageStr)
 
 		# Search and read back
-		dbObj2 = models.messageModel(message=TestMessageModel.messageStr)
+		indexList = webControl.searchForRecordsIndex(TestMessageModel.messageStr)
+		dbObj2 = models.messageModel(index=indexList[0])
 
 		dbMessageStr = dbObj2.message()
 
@@ -49,11 +50,12 @@ class TestMessageModel(TestCase):
 		dbObj1.message(TestMessageModel.messageStr)
 
 		# Delete message
-		dbObj3 = models.messageModel(message=TestMessageModel.messageStr)
+		indexList = webControl.searchForRecordsIndex(TestMessageModel.messageStr)
+		dbObj3 = models.messageModel(index=indexList[0])
 		dbObj3.deleteRecord()
 
 		# Search for "missing" record
-		dbObj = models.messageModel(message=TestMessageModel.messageStr)
+		dbObj = models.messageModel(index=indexList[0])
 		msgStr = dbObj.message()
 		testStr = "CANNOT FIND MESSAGE: " + TestMessageModel.messageStr
 		self.assertEquals(msgStr, testStr)
@@ -63,8 +65,9 @@ class TestMessageModel(TestCase):
 		# FIXME Broken due to bad lookup, FIX THE LOOKUP
 		# Looks up message that shouldn't exist
 		messageToTest = "someMissingMessage"
-		dbOjb1 = models.messageModel(message=messageToTest)
-		messageStr = dbOjb1.message()
+		indexList = webControl.searchForRecordsIndex(messageToTest)
+		dbObj1 = models.messageModel(index=indexList[0])
+		messageStr = dbObj1.message()
 		testStr = "CANNOT FIND MESSAGE: " + messageToTest
 
 		self.assertEqual(messageStr, testStr)
@@ -79,28 +82,6 @@ class TestMessageModel(TestCase):
 		testStr = "CANNOT FIND MESSAGE @ INDEX" + str(x * -1)
 
 		self.assertEqual(messageStr, testStr)
-
-
-	def test_searchForRecords(self):
-		# FIXME Broken due to bad lookup, FIX THE LOOKUP
-		""""Search for many records containing string"""
-		# Setup records
-		testMsg1 = TestMessageModel.messageStr + "timmy1"
-		testMsg2 = TestMessageModel.messageStr + "jimmy2"
-
-		dbObj = models.messageModel()
-		dbObj.message(testMsg1)
-		dbObj3 = models.messageModel(message=testMsg1)  # tim
-		msgOut1 = dbObj3.message()
-
-		dbObj2 = models.messageModel()
-		dbObj2.message(testMsg2)
-		dbObj4 = models.messageModel(message=testMsg2)  # jim
-		msgOut2 = dbObj4.message()
-
-		self.assertEqual(testMsg1, msgOut1)
-		self.assertEqual(testMsg2, msgOut2)
-
 
 	def test_doesRecordExist(self):
 		# FIXME Finish writing doesRecordExist test

@@ -47,7 +47,6 @@ class TestDbInterface(TestCase):
 
 		self.assertEquals(json3str, "json3", "JSON Mismatch")
 
-
 	def test_searchMessagesFromDB(self):
 		results = dbInterface.searchMessagesFromDB("json")
 		x = results[2]
