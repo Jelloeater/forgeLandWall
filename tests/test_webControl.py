@@ -36,3 +36,6 @@ class TestWebControl(TestCase):
 		testStr = dbObj2.message()
 
 		self.assertEqual(constants.messageStr,testStr)
+
+		indexList = webControl.searchForRecordsIndex('headheadheadheadheadheadhead')
+		self.assertFalse(indexList)

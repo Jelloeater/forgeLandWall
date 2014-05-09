@@ -7,6 +7,31 @@ __author__ = 'Jesse'
 
 class dbInterface(messageModel):
 	@classmethod
+	def searchForRecordsIndex(cls, messageIn):
+		"""
+		Returns list of message index's matching search string
+		When left empty, returns all message indexes, can also be used to see if a message is present
+		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
+		"""
+		dbConn, dbcursor = cls.dbConnect()
+		sqlStr = 'SELECT "index" FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
+		indexList = None
+		try:
+			dbcursor.execute(sqlStr)
+			indexList = dbcursor.fetchall()
+			listOut = []
+			for x in indexList:
+				listOut.append(x[0])
+			indexList = listOut
+			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
+			if globalVars.debugMode: print("Looked up record")
+		except TypeError:
+			if globalVars.debugMode: print("Record does not exist")
+		print(indexList)
+		dbConn.close()
+		return indexList
+
+	@classmethod
 	def getBottomIndexes(cls, numberOfBottomIndexesToGet=1):
 		"""Gets X number of index values from the bottom of the message table"""
 		dbConn, dbcursor = cls.dbConnect()
@@ -21,12 +46,13 @@ class dbInterface(messageModel):
 			return indexList
 
 	@classmethod
-	def getMessagesFromDB(cls, numberToGet):
+	def getMessagesFromDB(cls, numberToGet=0):
 		"""	Returns list of messages as instances of messageModel
 		@param numberToGet Number of db records to return
 		@return: msgList
 		@rtype : list
 		"""
+		# TODO default search returns all
 		indexList = cls.getBottomIndexes(numberToGet)
 		indexList.reverse()
 		msgList = []
@@ -107,7 +133,6 @@ class dbInterface(messageModel):
 		sqlStr = 'DELETE FROM messages;'
 		dbcursor.execute(sqlStr)
 		cls.dbClose(dbConn)
-
 	@classmethod
 	def getDict(cls, obj):
 		"""The default encoder to take the object instances	fields as JSON fields"""
@@ -115,6 +140,7 @@ class dbInterface(messageModel):
 
 
 class empty():
+
 	"""Dummy class for JSON creation"""
 	pass
 
@@ -124,6 +150,7 @@ class webControl(dbInterface):
 	Provides methods to work with POST, JSON and CRUD db operations
 	Works on the model INDIRECTLY
 	"""
+
 	@classmethod
 	def getJSON(cls, numberToGet=1):
 		return cls.getMessagesFromDBasJSONObjectArray(numberToGet)
@@ -135,13 +162,13 @@ class webControl(dbInterface):
 		# FIXME Create universal method for processing POST requests, a POST message splitter
 		print('postSplitter')
 		print(locals())
+	# TODO Should get all posts? Maybe create separate method for the main display
+	# TODO write update call
+	# TODO 1) Search for record index 2) update records (for loop)
 
 	@classmethod
 	def readPost(cls, postMessageIn):
 		pass
-	# TODO Should get all posts? Maybe create separate method for the main display
-	# TODO write update call
-	# TODO 1) Search for record index 2) update records (for loop)
 
 	@classmethod
 	def createRecord(cls, messageIn=None):
@@ -159,27 +186,3 @@ class webControl(dbInterface):
 		# TODO 1) Search for record index
 		# TODO 2) delete records (for loop)
 		pass
-
-	@classmethod
-	def searchForRecordsIndex(cls, messageIn):
-		"""
-		Returns list of message index's matching search string
-		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
-		"""
-		dbConn, dbcursor = cls.dbConnect()
-		sqlStr = 'SELECT "index" FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
-		indexList = None
-		try:
-			dbcursor.execute(sqlStr)
-			indexList = dbcursor.fetchall()
-			listOut = []
-			for x in indexList:
-				listOut.append(x[0])
-			indexList = listOut
-			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
-			if globalVars.debugMode: print("Looked up record")
-		except TypeError:
-			if globalVars.debugMode: print("Record does not exist")
-		print(indexList)
-		dbConn.close()
-		return indexList
