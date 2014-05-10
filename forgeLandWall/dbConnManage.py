@@ -1,16 +1,18 @@
 import sqlite3
 
-from forgeLandWall.settings import globalVars
-
 __author__ = 'Jesse Laptop'
 
+import logging
+from settings import globalVars
+logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
 
-class dbConnManage:
+
+class dbConnManage():
 	@staticmethod
 	def dbConnect():
 		""" Connects to Database
 		@return: dbConn, dbCur"""
-		if globalVars.debugMode: print("Connection Opened")
+		logging.info("Connection Opened")
 		dbConn = sqlite3.connect(globalVars.dbPath)
 		dbCur = dbConn.cursor()
 
@@ -23,4 +25,4 @@ class dbConnManage:
 		"""
 		dbConn.commit()
 		dbConn.close()
-		if globalVars.debugMode: print("Connection Closed")
+		logging.info("Connection Closed")

@@ -1,8 +1,10 @@
 import datetime
 
 from forgeLandWall.dbConnManage import dbConnManage
-from forgeLandWall.settings import globalVars
 
+import logging
+from settings import globalVars
+logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
 
 __author__ = 'Jesse'
 
@@ -21,7 +23,7 @@ class messageModel(dbConnManage):
 			# Index should be used for edits and delete though
 			self.__index = index
 			self.__lookupRecordFromIndex()
-			if globalVars.debugMode: print("Record Found")
+			logging.info("Looked up record")
 
 	def message(self, message=None):
 		"""Gets message from object, or writes message to DB"""
@@ -44,12 +46,12 @@ class messageModel(dbConnManage):
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
-			if globalVars.debugMode: print("Looked up record")
+			logging.info("Looked up record")
 		except TypeError:
 			self.__messageTxt = "CANNOT FIND MESSAGE @ INDEX" + str(self.__index)
 			self.__timestamp = ""
 			self.__index = ""
-			if globalVars.debugMode: print("Record does not exist")
+			logging.error("Record does not exist")
 
 		dbConn.close()
 
@@ -73,7 +75,7 @@ class messageModel(dbConnManage):
 		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
-		if globalVars.debugMode: print("RECORD DELETED")
+		logging.info("RECORD DELETED")
 		self.dbClose(dbConn)
 
 
@@ -91,6 +93,6 @@ class messageModel(dbConnManage):
 			if dbcursor.fetchone() is not None:
 				flag = True
 		except TypeError:
-			if globalVars.debugMode: print("Record does not exist")
+			logging.error("Record does not exist")
 		dbConn.close()
 		return flag

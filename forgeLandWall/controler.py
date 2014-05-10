@@ -1,8 +1,9 @@
 import json
 from forgeLandWall.models import messageModel
-from forgeLandWall.settings import globalVars
-import string
 
+import logging
+from settings import globalVars
+logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
 __author__ = 'Jesse'
 
 
@@ -25,9 +26,9 @@ class dbInterface(messageModel):
 				listOut.append(x[0])
 			indexList = listOut
 			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
-			if globalVars.debugMode: print("Looked up record")
+			logging.info("Looked up record")
 		except TypeError:
-			if globalVars.debugMode: print("Record does not exist")
+			logging.error("Record does not exist")
 		dbConn.close()
 		return indexList
 
@@ -164,16 +165,18 @@ class webControl(dbInterface):
 	def postControl(cls, requestBody):
 		"""Splits POST request and sends to correct method"""
 		# requestBody = POST Message
-		print('postControl')
+		logging.debug('postControl')
 		# FIXME Create universal method for processing POST requests, a POST message splitter
 
-		requestList = string.split(requestBody,'=')
+		requestList = str.split(requestBody,'=')
 		action = requestList[0]
+
 		data = requestList[1]
-		data = string.replace(data,'+', ' ')
-		print('Action: ' + action + ' Data: ' + data)
-		if action == 'create':
-			cls.createRecord(data)
+		logging.debug('Action: ' + action + ' Data: ' + data)
+		data = str.replace(data, '+', ' ')  # Adds proper space to message
+		if not str.isspace(data) and data != "":
+			if action == 'create':
+				cls.createRecord(data)
 
 
 	@classmethod

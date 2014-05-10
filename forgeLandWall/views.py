@@ -4,6 +4,10 @@ from forgeLandWall.models import messageModel
 
 __author__ = 'Jesse'
 
+import logging
+from settings import globalVars
+logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
+
 
 class JSON(webControl):
 	@classmethod
@@ -63,11 +67,13 @@ class HTMLHelper(webControl):
 	@staticmethod
 	def getForm(formType, output):
 		if formType == "create":
-			output.append('<form method="post">CREATE<input type="text" name="create"><input type="submit"></form>')
+			output.append('<form method="post">Create<input type="text" name="create"'
+			              'onsubmit="setTimeout(function () { window.location.reload(); }, 10)"'
+			              '><input type="submit"></form>')
 		if formType == "edit":
-			output.append('<form method="post">CREATE<input type="text" name="edit"><input type="submit"></form>')
+			output.append('<form method="post">Edit<input type="text" name="edit"><input type="submit"></form>')
 		if formType == "delete":
-			output.append('<form method="post">CREATE<input type="text" name="delete"><input type="submit"></form>')
+			output.append('<form method="post">Delete<input type="text" name="delete"><input type="submit"></form>')
 		return output
 
 	@classmethod
@@ -82,7 +88,6 @@ class HTMLHelper(webControl):
 			message = str(messageModel.message(x))  # Fields stored as unicode, just to make life hard -_-
 			timeStamp = str(messageModel.getTimestamp(x))
 			# Cannot use cls.message to call, it needs to directly access its associated class
-			print('Got Message: ' + message + ' ' + timeStamp)
 			output.append('<tr><td>' + message + '</td><td>' + timeStamp + '</td></tr>')
 		output.append('</table>')
 		return output
@@ -114,12 +119,6 @@ class HTTP(HTMLHelper):
 
 			request_body = self.environ['wsgi.input'].read(request_body_size)
 			cls.postControl(request_body)
-			# FIXME Call Controller.webControl.POSTSplitter
-
-			print("REQUEST_BODY:")
-			print(request_body)
-			# show form data as received by POST:
-			output.append(request_body)
 
 		output = HTMLHelper.getFooter(output)
 

@@ -2,6 +2,12 @@ from wsgiref.simple_server import make_server
 import forgeLandWall.settings as settings
 import forgeLandWall.dbSetup as dbSetup
 import forgeLandWall.views as views
+
+import logging
+from settings import globalVars
+logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
+# logging.disable(logging.DEBUG)
+
 __author__ = 'Jesse'
 
 
@@ -10,7 +16,7 @@ def main():
 	port = settings.globalVars.portNumber
 	dbSetup.setupDB()
 
-	print("Serving on: http://" + str(ip) + ":" + str(port))
+	logging.info("Serving on: http://" + str(ip) + ":" + str(port))
 	httpd = make_server(ip, port, webHandler)
 	httpd.serve_forever()
 
