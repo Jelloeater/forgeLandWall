@@ -5,8 +5,6 @@ from forgeLandWall.models import messageModel
 __author__ = 'Jesse'
 
 import logging
-from settings import globalVars
-logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
 
 
 class JSON(webControl):
@@ -79,6 +77,7 @@ class HTMLHelper(webControl):
 	@classmethod
 	def getMessagesTable(cls, output):
 		""" Adds all messages to the HTML output for display"""
+		logging.debug("Getting messages")
 		# TODO Should move this code to the controller? (It's really short though -_-)
 
 		output.append("<table><tr><th>Message</th><th>Timestamp</th></tr>")

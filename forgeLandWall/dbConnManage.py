@@ -1,10 +1,8 @@
 import sqlite3
-
-__author__ = 'Jesse Laptop'
-
 import logging
 from settings import globalVars
-logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
+
+__author__ = 'Jesse Laptop'
 
 
 class dbConnManage():
@@ -12,7 +10,7 @@ class dbConnManage():
 	def dbConnect():
 		""" Connects to Database
 		@return: dbConn, dbCur"""
-		logging.info("Connection Opened")
+		logging.debug("Connection Opened")
 		dbConn = sqlite3.connect(globalVars.dbPath)
 		dbCur = dbConn.cursor()
 
@@ -25,4 +23,4 @@ class dbConnManage():
 		"""
 		dbConn.commit()
 		dbConn.close()
-		logging.info("Connection Closed")
+		logging.debug("Connection Closed")

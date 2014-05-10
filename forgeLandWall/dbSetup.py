@@ -1,10 +1,10 @@
 import os
 from forgeLandWall.dbConnManage import dbConnManage as dbConnection
-
-__author__ = 'Jesse'
 import logging
 from settings import globalVars
-logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
+
+__author__ = 'Jesse'
+
 
 def setupDB():
 	"""	Initialize the database if it does not exist yet"""

@@ -1,6 +1,8 @@
-__author__ = 'smerlin'
 import os
 import socket
+import logging
+__author__ = 'smerlin'
+
 
 if os.name != "nt":
 	import fcntl
@@ -12,6 +14,8 @@ if os.name != "nt":
 
 
 def get_lan_ip():
+	logging.debug("Getting IP address")
+	logging.debug('OS: ' + os.name)
 	ip = socket.gethostbyname(socket.gethostname())
 	if ip.startswith("127.") and os.name != "nt":  # Checks for loop back adapter
 		interfaces = [

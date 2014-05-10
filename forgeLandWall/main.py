@@ -2,11 +2,10 @@ from wsgiref.simple_server import make_server
 import forgeLandWall.settings as settings
 import forgeLandWall.dbSetup as dbSetup
 import forgeLandWall.views as views
-
 import logging
-from settings import globalVars
-logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
-# logging.disable(logging.DEBUG)
+
+logging.basicConfig(format='%(levelname)s %(asctime)sZ  pid: %(process)s module: %(module)s   \t\t %(message)s',
+					level=logging.DEBUG)
 
 __author__ = 'Jesse'
 

@@ -20,7 +20,6 @@ class globalVars():
 	portNumber = 9000
 	debugMode = isDebugMode()
 	dbPath = "main.db"
-	logFormat = '%(asctime)sZ  pid: %(process)s %(levelname)s module: %(module)s   \t %(message)s'
 	# TODO Maybe work out any absolute path in case we get multiple folders
 
 	def __init__(self):

@@ -2,8 +2,6 @@ import json
 from forgeLandWall.models import messageModel
 
 import logging
-from settings import globalVars
-logging.basicConfig(format=globalVars.logFormat, level=logging.DEBUG)
 __author__ = 'Jesse'
 
 
@@ -26,7 +24,7 @@ class dbInterface(messageModel):
 				listOut.append(x[0])
 			indexList = listOut
 			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
-			logging.info("Looked up record")
+			logging.debug("Looked up record")
 		except TypeError:
 			logging.error("Record does not exist")
 		dbConn.close()
