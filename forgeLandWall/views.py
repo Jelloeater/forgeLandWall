@@ -73,6 +73,7 @@ class HTMLHelper(webControl):
 	@classmethod
 	def getMessages(cls, output):
 		""" Adds all messages to the HTML output for display"""
+		# TODO Should move this code to the controller? (It's really short though -_-)
 		output.append("<br>")
 		msgList = cls.getMessagesFromDB()
 		for x in msgList:
@@ -81,8 +82,8 @@ class HTMLHelper(webControl):
 			# Cannot use cls.message to call, it needs to directly access its associated class
 			print(message)
 			print(timeStamp)
-			output.append(message)
-			output.append(timeStamp)
+			output.append(str(message))
+			output.append(str(timeStamp))
 			output.append("<br>")
 
 		return output
@@ -94,6 +95,7 @@ class HTMLHelper(webControl):
 		return output
 
 
+
 class HTTP(HTMLHelper):
 	"""Handles all web and text requests over HTTP"""
 	@staticmethod
@@ -102,6 +104,8 @@ class HTTP(HTMLHelper):
 		output = HTMLHelper.getHeader()
 
 		output = HTMLHelper.getForm("create", output)
+
+
 		output = HTMLHelper.getMessages(output)
 
 		# command=create&input=someTextHere
@@ -114,13 +118,20 @@ class HTTP(HTMLHelper):
 
 			request_body = self.environ['wsgi.input'].read(request_body_size)
 			# FIXME Call Controller.webControl.POSTSplitter
+			print("REQUEST_BODY:")
 			print(request_body)
 			# TODO If POST = update
 			# show form data as received by POST:
 			output.append('<h1>FORM DATA</h1>')
 			output.append(request_body)
 
+
 		output = HTMLHelper.getFooter(output)
+		print('JOIN OUTPUT')
+		print(output)
+
+		# output = str.join(self,output)
+
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]

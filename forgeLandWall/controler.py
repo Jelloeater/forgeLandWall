@@ -27,7 +27,6 @@ class dbInterface(messageModel):
 			if globalVars.debugMode: print("Looked up record")
 		except TypeError:
 			if globalVars.debugMode: print("Record does not exist")
-		print(indexList)
 		dbConn.close()
 		return indexList
 
