@@ -1,6 +1,7 @@
 import json
 from forgeLandWall.models import messageModel
 from forgeLandWall.settings import globalVars
+import string
 
 __author__ = 'Jesse'
 
@@ -160,19 +161,25 @@ class webControl(dbInterface):
 		return cls.getMessagesFromDBasJSONObjectArray(numberToGet)
 
 	@classmethod
-	def postSplitter(cls, requestBody):
+	def postControl(cls, requestBody):
 		"""Splits POST request and sends to correct method"""
 		# requestBody = POST Message
+		print('postControl')
 		# FIXME Create universal method for processing POST requests, a POST message splitter
-		print('postSplitter')
-		print(locals())
-	# TODO Should get all posts? Maybe create separate method for the main display
-	# TODO write update call
-	# TODO 1) Search for record index 2) update records (for loop)
+
+		requestList = string.split(requestBody,'=')
+		action = requestList[0]
+		data = requestList[1]
+		data = string.replace(data,'+', ' ')
+		print('Action: ' + action + ' Data: ' + data)
+		if action == 'create':
+			cls.createRecord(data)
+
 
 	@classmethod
 	def readPost(cls, postMessageIn):
 		pass
+		# TODO Should get all posts? Maybe create separate method for the main display
 
 	@classmethod
 	def createRecord(cls, messageIn=None):

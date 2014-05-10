@@ -39,7 +39,7 @@ class JSON(webControl):
 			request_body_size = 0
 		request_body = self.environ['wsgi.input'].read(request_body_size)
 
-		cls.postSplitter(request_body)
+		cls.postControl(request_body)
 		output.append('Request Received')
 
 		output_len = sum(len(line) for line in output)
@@ -94,11 +94,10 @@ class HTMLHelper(webControl):
 		return output
 
 
-
 class HTTP(HTMLHelper):
 	"""Handles all web and text requests over HTTP"""
-	@staticmethod
-	def GET_MainIndex(self):
+	@classmethod
+	def GET_MainIndex(cls, self):
 		""" HTML for create new message view + POST controller"""
 		output = HTMLHelper.getHeader()
 
@@ -114,12 +113,12 @@ class HTTP(HTMLHelper):
 				request_body_size = 0
 
 			request_body = self.environ['wsgi.input'].read(request_body_size)
+			cls.postControl(request_body)
 			# FIXME Call Controller.webControl.POSTSplitter
+
 			print("REQUEST_BODY:")
 			print(request_body)
-			# TODO If POST = update
 			# show form data as received by POST:
-			output.append('<h1>FORM DATA</h1>')
 			output.append(request_body)
 
 		output = HTMLHelper.getFooter(output)
