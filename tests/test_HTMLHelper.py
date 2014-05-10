@@ -29,7 +29,7 @@ class TestHTMLHelper(TestCase):
 
 	def test_getMessages(self):
 		output = []
-		output = HTMLHelper.getMessages(output)
+		output = HTMLHelper.getMessagesTable(output)
 		print(output)
 		self.assertEqual(output[0],"<br>")
 		self.assertEqual(output[1], constants.messageStr + 'meow')

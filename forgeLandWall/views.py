@@ -71,21 +71,20 @@ class HTMLHelper(webControl):
 		return output
 
 	@classmethod
-	def getMessages(cls, output):
+	def getMessagesTable(cls, output):
 		""" Adds all messages to the HTML output for display"""
 		# TODO Should move this code to the controller? (It's really short though -_-)
-		output.append("<br>")
+
+		output.append("<table><tr><th>Message</th><th>Timestamp</th></tr>")
+
 		msgList = cls.getMessagesFromDB()
 		for x in msgList:
-			message = messageModel.message(x)
-			timeStamp = messageModel.getTimestamp(x)
+			message = str(messageModel.message(x))  # Fields stored as unicode, just to make life hard -_-
+			timeStamp = str(messageModel.getTimestamp(x))
 			# Cannot use cls.message to call, it needs to directly access its associated class
-			print(message)
-			print(timeStamp)
-			output.append(str(message))
-			output.append(str(timeStamp))
-			output.append("<br>")
-
+			print('Got Message: ' + message + ' ' + timeStamp)
+			output.append('<tr><td>' + message + '</td><td>' + timeStamp + '</td></tr>')
+		output.append('</table>')
 		return output
 
 	@staticmethod
@@ -105,9 +104,7 @@ class HTTP(HTMLHelper):
 
 		output = HTMLHelper.getForm("create", output)
 
-
-		output = HTMLHelper.getMessages(output)
-
+		output = HTMLHelper.getMessagesTable(output)
 		# command=create&input=someTextHere
 		# If we detect input, do this
 		if self.environ['REQUEST_METHOD'] == 'POST':
@@ -125,12 +122,9 @@ class HTTP(HTMLHelper):
 			output.append('<h1>FORM DATA</h1>')
 			output.append(request_body)
 
-
 		output = HTMLHelper.getFooter(output)
-		print('JOIN OUTPUT')
-		print(output)
 
-		# output = str.join(self,output)
+		output = ''.join(output)
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
