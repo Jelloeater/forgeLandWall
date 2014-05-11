@@ -12,6 +12,7 @@ class JSON(webControl):
 	def getMessages(cls, self):
 		"""Handles all text JSON GET requests
 		GETS should be in the format server/raw/numberOfPostsToGetViaJSON"""
+		logging.debug("getMessages")
 		output = ['']
 
 		path = self.environ['PATH_INFO']
@@ -20,6 +21,7 @@ class JSON(webControl):
 
 		# MAIN PROCESSING HERE!
 		numberToGet = int(path[2])
+		logging.debug('Number To Get:' + str(numberToGet))
 		output.append(cls.getJSON(numberToGet))  # Calls controller
 
 		output_len = sum(len(line) for line in output)
@@ -32,7 +34,8 @@ class JSON(webControl):
 	@classmethod
 	def putMessages(cls, self):
 		"""Handles all text JSON PUT requests
-		PUT should be in the format create=x, edit=x, delete=x """
+		PUT should be in the format create=message, edit=index+message=newmessage, delete=index """
+		logging.debug('JSON PUTs')
 		output = ['']
 
 		try:
@@ -41,8 +44,14 @@ class JSON(webControl):
 			request_body_size = 0
 		request_body = self.environ['wsgi.input'].read(request_body_size)
 
-		cls.postControl(request_body)
-		output.append('Request Received')
+		if request_body_size != 0:
+			cls.postControl(request_body)
+			output.append('Request Received')
+			# FIXME Should reply with url of index for create
+		else:
+			output.append('Empty Request')
+			logging.warning('Empty Request Body')
+
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'

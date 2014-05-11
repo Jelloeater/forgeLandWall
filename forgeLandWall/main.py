@@ -4,7 +4,7 @@ import forgeLandWall.dbSetup as dbSetup
 import forgeLandWall.views as views
 import logging
 
-logging.basicConfig(format='%(levelname)s %(asctime)sZ  pid: %(process)s module: %(module)s   \t\t %(message)s',
+logging.basicConfig(format="[%(asctime)s] [%(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)",
 					level=logging.DEBUG)
 
 __author__ = 'Jesse'
@@ -32,22 +32,27 @@ class webHandler():
 
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
-		path = str(path)
+		logging.info('Accessing' + path)
 
 		if path is not "/":
 			path = path.split('/')
+			logging.debug('PathList: ' + str(path))
 
-			if path[1] == "edit" and len(path) <= 2:
-				return views.HTTP.GET_edit(self)
-			if path[1] == "delete" and len(path) <= 2:
-				return views.HTTP.GET_delete(self)
-			if path[1] == "raw" and len(path) >= 3 and path[2].isdigit():  # GET POSTS| /raw/9000
+			if len(path) == 2:
+				if path[1] == "edit":
+					return views.HTTP.GET_edit(self)
+				if path[1] == "delete":
+					return views.HTTP.GET_delete(self)
+				if path[1] == "raw":  # POST Posts| /raw [POST][create=x, delete=x]
+					logging.debug('POST Messages')
+					return views.JSON.putMessages(self)
+
+			if len(path) == 3 and path[1] == "raw" and path[2].isdigit():  # GET Messages| /raw/9000
+				logging.debug('GET Messages')
 				return views.JSON.getMessages(self)
-			if path[1] == "raw" and len(path) <= 2:  # PUT POSTS| /raw [POST][create=x, delete=x]
-				return views.JSON.putMessages(self)
+
 			else:
-				print('NOT FOUND')
-				print(path[1])
+				logging.info('URL NOT FOUND: /' + str(path[1]))
 				return views.HTTP.notFound(self)
 		else:
 			return views.HTTP.GET_MainIndex(self)
