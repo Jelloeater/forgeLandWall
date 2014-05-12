@@ -1,8 +1,8 @@
-from re import L
 from unittest import TestCase
-from forgeLandWall import models
-from forgeLandWall.controler import webControl
 import constants
+import models
+from forgeLandWall.controler import webControl
+
 import os
 
 __author__ = 'Jesse Laptop'

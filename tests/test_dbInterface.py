@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from forgeLandWall.controler import dbInterface
+from controler import dbInterface
 
 
 __author__ = 'Jesse'

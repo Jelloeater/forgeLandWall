@@ -1,8 +1,8 @@
 __author__ = 'Jesse'
 from unittest import TestCase
-import forgeLandWall.models as models
-from forgeLandWall.controler import webControl
-from forgeLandWall.dbConnManage import dbConnManage
+import models as models
+from controler import webControl
+from dbConnManage import dbConnManage
 import os
 import constants
 

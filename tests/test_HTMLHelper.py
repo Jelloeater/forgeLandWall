@@ -1,9 +1,9 @@
 from unittest import TestCase
-from forgeLandWall import models
-from forgeLandWall.views import HTMLHelper
+import models
+from views import HTMLHelper
 import constants
 import os
-from forgeLandWall.dbConnManage import dbConnManage
+from dbConnManage import dbConnManage
 __author__ = 'Jesse'
 
 

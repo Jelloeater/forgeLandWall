@@ -3,7 +3,7 @@ import urllib2
 import os
 from subprocess import Popen
 import time
-import forgeLandWall.settings as settings
+import settings as settings
 
 __author__ = 'Jesse'
 
