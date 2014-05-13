@@ -74,13 +74,16 @@ class HTMLHelper(webControl):
 	@staticmethod
 	def getForm(formType, output):
 		if formType == "create":
-			output.append('<form method="post">Create<input type="text" name="create"'
-			              'onsubmit="setTimeout(function () { window.location.reload(); }, 10)"'
-			              '><input type="submit"></form>')
+			output.append('<form method="post">'
+			              'Create<input type="text" name="create">'
+			              '<input type="submit"></form>')
 		if formType == "edit":
-			output.append('<form method="post">Edit<input type="text" name="edit"><input type="submit"></form>')
+			output.append('<form method="post">'
+			              'Edit<input type="text" name="edit">'
+			              'Index<input type="text" name="index">'
+			              '<input type="submit"></form>')
 		if formType == "delete":
-			output.append('<form method="post">Delete<input type="text" name="delete"><input type="submit"></form>')
+			output.append('<form method="post">Delete(index)<input type="text" name="delete"><input type="submit"></form>')
 		return output
 
 	@classmethod

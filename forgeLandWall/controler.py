@@ -175,6 +175,13 @@ class webControl(dbInterface):
 		if not str.isspace(data) and data != "":
 			if action == 'create':
 				cls.createRecord(data)
+			if action == 'delete':
+				cls.deleteRecords(data)
+			if action == 'edit':
+				indexIn = requestList[2]
+				messageIn = requestList[1].split('&')
+				cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0].replace("+", " "))
+				pass
 
 
 	@classmethod
@@ -188,13 +195,13 @@ class webControl(dbInterface):
 		x.message(message=messageIn)
 
 	@classmethod
-	def updateRecords(cls, messageIn=None):
-		# TODO 1) Search for record index
-		# TODO 2) update records (for loop)
+	def updateRecords(cls, indexIn, messageIn=None):
+		x = messageModel(index=indexIn)
+		x.message(message=messageIn)
 		pass
 
 	@classmethod
-	def deleteRecords(cls, messageIn=None):
-		# TODO 1) Search for record index
-		# TODO 2) delete records (for loop)
+	def deleteRecords(cls, index=None):
+		x = messageModel(index=index)
+		x.deleteRecord()
 		pass
