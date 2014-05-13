@@ -178,6 +178,9 @@ class webControl(dbInterface):
 			if action == 'delete':
 				cls.deleteRecords(data)
 			if action == 'edit':
+				# TODO write better method for dealing with out of sequence POST messages
+				# edit=someMessage&index=someNumber (normal)
+				# index=someNumber&edit=someMessage (no control for this)
 				indexIn = requestList[2]
 				messageIn = requestList[1].split('&')
 				cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0].replace("+", " "))
