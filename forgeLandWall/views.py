@@ -11,7 +11,7 @@ import logging
 class JSON(webControl):
 	@classmethod
 	def getMessages(cls, self):
-		"""Handles all text JSON GET requests
+		"""Handles text JSON GET requests
 		GETS should be in the format server/raw/numberOfPostsToGetViaJSON"""
 		logging.debug("getMessages")
 		output = ['']
@@ -22,17 +22,37 @@ class JSON(webControl):
 		# MAIN PROCESSING HERE!
 		numberToGet = int(path[2])
 		logging.debug('Number To Get:' + str(numberToGet))
-		output.append(cls.getJSON(numberToGet))  # Calls controller
+		output.append(cls.getJSONmsgs(numberToGet))  # Calls controller
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-		# TODO Add query output?
 		yield ''.join(output)
 
 	@classmethod
-	def putMessages(cls, self):
+	def getMessage(cls, self):
+		"""Handles all text JSON GET requests
+		GETS should be in the format /msg/indexToGet"""
+		logging.debug("getSingleMessage")
+		output = ['']
+		path = self.environ['PATH_INFO']
+		path = str(path)
+		if path is not "/": path = path.split('/')
+
+		# MAIN PROCESSING HERE!
+		indexToGet = int(path[2])
+		logging.debug('Index To Get:' + str(indexToGet))
+		output.append(str(webControl.getSingleMsg(indexToGet)))  # Calls controller
+
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		yield ''.join(output)
+
+	@classmethod
+	def POST_Messages(cls, self):
 		"""Handles all text JSON PUT requests
 		PUT should be in the format create=message, edit=index+message=newmessage, delete=index """
 		logging.debug('JSON PUTs')
@@ -57,7 +77,6 @@ class JSON(webControl):
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
-		# TODO Add query output?
 		yield ''.join(output)
 
 

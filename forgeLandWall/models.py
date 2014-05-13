@@ -66,7 +66,7 @@ class messageModel(dbConnManage):
 			dbConn, dbcursor = self.dbConnect()
 			sqlStr = 'UPDATE messages SET message = "' + self.__messageTxt + '", "timestamp" = "' + \
 					str(self.__getTimeStampFromSystem()) + '"  WHERE "index" = "' + str(self.__index) + '";'
-			# TODO Add try and catch to SQL code
+			# TODO Add try and catch to SQL code (why?)
 			dbcursor.execute(sqlStr)
 			self.dbClose(dbConn)
 

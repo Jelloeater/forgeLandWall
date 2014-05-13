@@ -5,7 +5,10 @@ import logging
 __author__ = 'Jesse'
 
 
+
 class dbInterface(messageModel):
+
+
 	@classmethod
 	def searchForRecordsIndex(cls, messageIn):
 		"""
@@ -19,6 +22,29 @@ class dbInterface(messageModel):
 		try:
 			dbcursor.execute(sqlStr)
 			indexList = dbcursor.fetchall()
+			listOut = []
+			for x in indexList:
+				listOut.append(x[0])
+			indexList = listOut
+			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
+			logging.debug("Looked up record")
+		except TypeError:
+			logging.error("Record does not exist")
+		dbConn.close()
+		return indexList
+	@classmethod
+	def searchForRecordIndex(cls, indexIn):
+		"""
+		Returns list of message index's matching search string
+		When left empty, returns all message indexes, can also be used to see if a message is present
+		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
+		"""
+		dbConn, dbcursor = cls.dbConnect()
+		sqlStr = 'SELECT "index" FROM messages WHERE "index" LIKE "%' + indexIn + '%";'
+		indexList = None
+		try:
+			dbcursor.execute(sqlStr)
+			indexList = dbcursor.fetch()
 			listOut = []
 			for x in indexList:
 				listOut.append(x[0])
@@ -51,7 +77,6 @@ class dbInterface(messageModel):
 		@return: msgList
 		@rtype : list
 		"""
-		# TODO default search returns all
 		msgList = []
 		if numberToGet == 0:
 			indexList = cls.searchForRecordsIndex("")
@@ -73,9 +98,6 @@ class dbInterface(messageModel):
 
 	@classmethod
 	def getMessagesFromDBasJSONObjectArray(cls, numberToGet):
-		"""	Returns a JSON string of the numberToGet bottom database entries
-		:param numberToGet:
-		"""
 		msgList = cls.getMessagesFromDB(numberToGet)
 
 		msgObjList = []
@@ -84,32 +106,21 @@ class dbInterface(messageModel):
 			msgObj = empty()
 			msgObj.message = messageModel.message(messageModelInstance)
 			msgObj.timestamp = messageModel.getTimestamp(messageModelInstance)
+			msgObj.index = messageModel.getIndex(messageModelInstance)
 			msgObjList.append(msgObj)
 
 		return json.dumps(msgObjList, default=cls.getDict, sort_keys=True)
 
 	@classmethod
-	def getMessagesFromDBasJSONArray(cls, numberToGet):
-		"""
-		Returns 2D Array of messages & timestamps
-		@param numberToGet:
-		@return: JSON String
-		"""
-		msgList = cls.getMessagesFromDB(numberToGet)
+	def getMessageAsJSONObject(cls, index):
 
-		msgListArray = []
-		timeListArray = []
-		for messageModelInstance in msgList:
-			msgStr = messageModel.message(messageModelInstance)
-			timeStr = messageModel.getTimestamp(messageModelInstance)
-			msgListArray.append(msgStr)
-			timeListArray.append(timeStr)
+		msgObj = messageModel(index=index)  # Gets the message via index
+		msgJSON = empty()
+		msgJSON.message = msgObj.message()
+		msgJSON.timestamp = msgObj.getTimestamp()
+		msgJSON.index = msgObj.getIndex()
 
-		msgListBag = zip(msgListArray, timeListArray)
-
-		retStr = json.dumps(msgListBag, sort_keys=True)
-
-		return retStr
+		return json.dumps(msgJSON, default=cls.getDict, sort_keys=True)
 
 	@classmethod
 	def searchMessagesFromDB(cls, messageIn=None):
@@ -118,7 +129,7 @@ class dbInterface(messageModel):
 		This is a raw text search, it is NOT for altering anything, it's just so the user can get
 		simple query results
 		"""
-		# TODO Maybe remove this or rewrite is when done with models.getMessagesFromDB
+		# TODO Maybe remove this or rewrite is when done with models.getMessagesFromDB (WAT?)
 		if messageIn is not None:
 			dbConn, dbcursor = cls.dbConnect()
 
@@ -137,6 +148,7 @@ class dbInterface(messageModel):
 		sqlStr = 'DELETE FROM messages;'
 		dbcursor.execute(sqlStr)
 		cls.dbClose(dbConn)
+
 	@classmethod
 	def getDict(cls, obj):
 		"""The default encoder to take the object instances	fields as JSON fields"""
@@ -144,7 +156,6 @@ class dbInterface(messageModel):
 
 
 class empty():
-
 	"""Dummy class for JSON creation"""
 	pass
 
@@ -156,15 +167,18 @@ class webControl(dbInterface):
 	"""
 
 	@classmethod
-	def getJSON(cls, numberToGet=1):
+	def getJSONmsgs(cls, numberToGet=1):
 		return cls.getMessagesFromDBasJSONObjectArray(numberToGet)
+
+	@classmethod
+	def getSingleMsg(cls, index):
+		return cls.getMessageAsJSONObject(index)
 
 	@classmethod
 	def postControl(cls, requestBody):
 		"""Splits POST request and sends to correct method"""
 		# requestBody = POST Message
 		logging.debug('postControl')
-		# FIXME Create universal method for processing POST requests, a POST message splitter
 
 		requestList = str.split(requestBody,'=')
 		action = requestList[0]
@@ -184,13 +198,6 @@ class webControl(dbInterface):
 				indexIn = requestList[2]
 				messageIn = requestList[1].split('&')
 				cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0].replace("+", " "))
-				pass
-
-
-	@classmethod
-	def readPost(cls, postMessageIn):
-		pass
-		# TODO Should get all posts? Maybe create separate method for the main display
 
 	@classmethod
 	def createRecord(cls, messageIn=None):

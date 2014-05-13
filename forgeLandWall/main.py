@@ -21,11 +21,6 @@ def main():
 
 
 class webHandler():
-	"""
-	root      Create
-	/edit     update
-	/delete   delete
-	"""
 	def __init__(self, environ, start_response):
 		self.environ = environ
 		self.start = start_response
@@ -43,13 +38,17 @@ class webHandler():
 					return views.HTTP.GET_edit(self)
 				if path[1] == "delete":
 					return views.HTTP.GET_delete(self)
-				if path[1] == "raw":  # POST Posts| /raw [POST][create=x, delete=x]
+				if path[1] == "post":  # POST Posts| /post [POST][create=x, delete=x]
 					logging.debug('POST Messages')
-					return views.JSON.putMessages(self)
+					return views.JSON.POST_Messages(self)
 
-			if len(path) == 3 and path[1] == "raw" and path[2].isdigit():  # GET Messages| /raw/9000
+			if len(path) == 3 and path[1] == "get" and path[2].isdigit():  # GET Messages| /get/10
 				logging.debug('GET Messages')
 				return views.JSON.getMessages(self)
+
+			if len(path) == 3 and path[1] == "msg" and path[2].isdigit():  # GET Message| /msg/234
+				logging.debug('GET Single Message')
+				return views.JSON.getMessage(self)
 
 			else:
 				logging.info('URL NOT FOUND: /' + str(path[1]))
