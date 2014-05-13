@@ -9,6 +9,7 @@ import logging
 
 
 class JSON(webControl):
+	""" Forwards all JSON related HTTP requests to controller methods"""
 	@classmethod
 	def getMessages(cls, self):
 		"""Handles text JSON GET requests
@@ -79,6 +80,26 @@ class JSON(webControl):
 		self.start(status, response_headers)
 		yield ''.join(output)
 
+	@classmethod
+	def getMessagesSearch(cls, self):
+		""" Calls search function and adds returned JSON to HTML output
+		GETS should be in the format /search/messagesToSearchFor"""
+		logging.debug("searchMessageJSON")
+		output = ['']
+		path = self.environ['PATH_INFO']
+		path = str(path)
+		if path is not "/": path = path.split('/')
+
+		# MAIN PROCESSING HERE!
+		msgToSearchFor = path[2]
+		logging.debug('Messages To Get:' + str(msgToSearchFor))
+		output.append(str(webControl.searchForMessagesJSON(msgToSearchFor)))  # Calls controller
+
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		yield ''.join(output)
 
 class HTMLHelper(webControl):
 	@staticmethod

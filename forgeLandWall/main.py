@@ -21,6 +21,7 @@ def main():
 
 
 class webHandler():
+	""" Sends HTTP requests to the proper functions"""
 	def __init__(self, environ, start_response):
 		self.environ = environ
 		self.start = start_response
@@ -41,6 +42,10 @@ class webHandler():
 				if path[1] == "post":  # POST Posts| /post [POST][create=x, delete=x]
 					logging.debug('POST Messages')
 					return views.JSON.POST_Messages(self)
+
+			if len(path) == 3 and path[1] == "search" and str(path[2]):  # GET Search Messages| /get/msgToSearchFor
+				logging.debug('GET Messages')
+				return views.JSON.getMessagesSearch(self)
 
 			if len(path) == 3 and path[1] == "get" and path[2].isdigit():  # GET Messages| /get/10
 				logging.debug('GET Messages')

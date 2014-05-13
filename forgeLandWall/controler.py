@@ -10,7 +10,7 @@ class dbInterface(messageModel):
 
 
 	@classmethod
-	def searchForRecordsIndex(cls, messageIn):
+	def searchForRecordsIndex(cls, messageIn=""):
 		"""
 		Returns list of message index's matching search string
 		When left empty, returns all message indexes, can also be used to see if a message is present
@@ -40,7 +40,7 @@ class dbInterface(messageModel):
 		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
 		"""
 		dbConn, dbcursor = cls.dbConnect()
-		sqlStr = 'SELECT "index" FROM messages WHERE "index" LIKE "%' + indexIn + '%";'
+		sqlStr = 'SELECT "index" FROM messages WHERE "index"=  + indexIn + ;'
 		indexList = None
 		try:
 			dbcursor.execute(sqlStr)
@@ -173,6 +173,15 @@ class webControl(dbInterface):
 	@classmethod
 	def getSingleMsg(cls, index):
 		return cls.getMessageAsJSONObject(index)
+
+	@classmethod
+	def searchForMessagesJSON(cls, msgToSearchFor):
+		""" Takes message string and returns JSON object"""
+		logging.debug('Looking up: ' + msgToSearchFor)
+		# FIXME Search for message and return JSON
+		indexList = cls.searchForRecordsIndex(msgToSearchFor)
+		# TODO Take index and return message as JSON
+		logging.debug('Got message')
 
 	@classmethod
 	def postControl(cls, requestBody):
