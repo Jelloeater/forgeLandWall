@@ -2,6 +2,7 @@ import datetime
 from forgeLandWall.controler import webControl
 from forgeLandWall.models import messageModel
 
+
 __author__ = 'Jesse'
 
 import logging
@@ -14,7 +15,6 @@ class JSON(webControl):
 		GETS should be in the format server/raw/numberOfPostsToGetViaJSON"""
 		logging.debug("getMessages")
 		output = ['']
-
 		path = self.environ['PATH_INFO']
 		path = str(path)
 		if path is not "/":	path = path.split('/')
@@ -89,14 +89,21 @@ class HTMLHelper(webControl):
 		logging.debug("Getting messages")
 		# TODO Should move this code to the controller? (It's really short though -_-)
 
-		output.append("<table><tr><th>Message</th><th>Timestamp</th></tr>")
+		output.append("<table><tr><th>Message</th><th>Timestamp</th><th>Index</th></tr>")
 
 		msgList = cls.getMessagesFromDB()
 		for x in msgList:
 			message = str(messageModel.message(x))  # Fields stored as unicode, just to make life hard -_-
 			timeStamp = str(messageModel.getTimestamp(x))
+			msgIndex = str(messageModel.getIndex(x))
 			# Cannot use cls.message to call, it needs to directly access its associated class
-			output.append('<tr><td>' + message + '</td><td>' + timeStamp + '</td></tr>')
+
+			output.append('<tr>')
+			output.append('<td>' + message + '</td>')
+			output.append('<td>' + timeStamp + '</td>')
+			output.append('<td>' + msgIndex + '</td>')
+			output.append('</tr>')
+
 		output.append('</table>')
 		return output
 
@@ -138,29 +145,58 @@ class HTTP(HTMLHelper):
 		self.start(status, response_headers)
 		yield ''.join(output)
 
-	@staticmethod
-	def GET_edit(self):
+	@classmethod
+	def GET_edit(cls, self):
+		""" HTML for create new message view + POST controller"""
 		output = HTMLHelper.getHeader()
 
 		output = HTMLHelper.getForm("edit", output)
 
+		output = HTMLHelper.getMessagesTable(output)
+		# command=create&input=someTextHere
+		# If we detect input, do this
+		if self.environ['REQUEST_METHOD'] == 'POST':
+			try:
+				request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+			except ValueError:
+				request_body_size = 0
+
+			request_body = self.environ['wsgi.input'].read(request_body_size)
+			cls.postControl(request_body)
+
 		output = HTMLHelper.getFooter(output)
 
-		# FIXME Call Controller.webControl.POSTSplitter
+		output = ''.join(output)
+
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 		yield ''.join(output)
 
-	@staticmethod
-	def GET_delete(self):
+	@classmethod
+	def GET_delete(cls, self):
+		""" HTML for create new message view + POST controller"""
 		output = HTMLHelper.getHeader()
 
 		output = HTMLHelper.getForm("delete", output)
 
+		output = HTMLHelper.getMessagesTable(output)
+		# command=create&input=someTextHere
+		# If we detect input, do this
+		if self.environ['REQUEST_METHOD'] == 'POST':
+			try:
+				request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+			except ValueError:
+				request_body_size = 0
+
+			request_body = self.environ['wsgi.input'].read(request_body_size)
+			cls.postControl(request_body)
+
 		output = HTMLHelper.getFooter(output)
-		# FIXME Call Controller.webControl.POSTSplitter
+
+		output = ''.join(output)
+
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]

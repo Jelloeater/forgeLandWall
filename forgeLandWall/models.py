@@ -32,6 +32,9 @@ class messageModel(dbConnManage):
 	def getTimestamp(self):
 		return self.__timestamp
 
+	def getIndex(self):
+		return self.__index
+
 	def __lookupRecordFromIndex(self):  # READ
 		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'SELECT * FROM messages where "index" = "' + str(self.__index) + '"'
@@ -67,13 +70,13 @@ class messageModel(dbConnManage):
 			dbcursor.execute(sqlStr)
 			self.dbClose(dbConn)
 
+
 	def deleteRecord(self):  # DELETE
 		dbConn, dbcursor = self.dbConnect()
 		sqlStr = 'DELETE FROM messages WHERE "index" = "' + str(self.__index) + '";'
 		dbcursor.execute(sqlStr)
 		logging.debug("RECORD DELETED")
 		self.dbClose(dbConn)
-
 
 	@staticmethod
 	def __getTimeStampFromSystem():
