@@ -44,7 +44,7 @@ class JSON(webControl):
 		# MAIN PROCESSING HERE!
 		indexToGet = int(path[2])
 		logging.debug('Index To Get:' + str(indexToGet))
-		output.append(str(webControl.getSingleMsg(indexToGet)))  # Calls controller
+		output.append(str(cls.getMessageAsJSONObject(indexToGet)))  # Calls controller
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'

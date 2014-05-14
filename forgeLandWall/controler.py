@@ -11,6 +11,7 @@ class dbInterface(messageModel):
 
 	@classmethod
 	def searchForRecordsIndex(cls, messageIn=""):
+		# FIXME Consolidate searchForRecordsIndex and searchForRecordIndex into one function
 		"""
 		Returns list of message index's matching search string
 		When left empty, returns all message indexes, can also be used to see if a message is present
@@ -170,18 +171,22 @@ class webControl(dbInterface):
 	def getJSONmsgs(cls, numberToGet=1):
 		return cls.getMessagesFromDBasJSONObjectArray(numberToGet)
 
-	@classmethod
-	def getSingleMsg(cls, index):
-		return cls.getMessageAsJSONObject(index)
 
 	@classmethod
 	def searchForMessagesJSON(cls, msgToSearchFor):
 		""" Takes message string and returns JSON object"""
 		logging.debug('Looking up: ' + msgToSearchFor)
-		# FIXME Search for message and return JSON
 		indexList = cls.searchForRecordsIndex(msgToSearchFor)
-		# TODO Take index and return message as JSON
+		jsonString = []
+		jsonString.append("[")
+		for x in indexList:
+			jsonString.append(cls.getMessageAsJSONObject(x))
+			jsonString.append(",")
+
+		jsonString.pop() # Remove the extra comma introduced in the for loop
 		logging.debug('Got message')
+		jsonString.append(']')
+		return ''.join(jsonString)
 
 	@classmethod
 	def postControl(cls, requestBody):
