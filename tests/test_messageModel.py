@@ -30,7 +30,7 @@ class TestMessageModel(TestCase):
 		dbObj.message(TestMessageModel.messageStr)
 
 		# Search and read back
-		indexList = webControl.searchForRecordsIndex(TestMessageModel.messageStr)
+		indexList = webControl.searchRecords(TestMessageModel.messageStr)
 		dbObj2 = models.messageModel(index=indexList[0])
 
 		dbMessageStr = dbObj2.message()
@@ -43,7 +43,7 @@ class TestMessageModel(TestCase):
 		dbObj1.message(TestMessageModel.messageStr)
 
 		# Delete message
-		indexList = webControl.searchForRecordsIndex(TestMessageModel.messageStr)
+		indexList = webControl.searchRecords(TestMessageModel.messageStr)
 		dbObj3 = models.messageModel(index=indexList[0])
 		dbObj3.deleteRecord()
 
@@ -70,6 +70,6 @@ class TestMessageModel(TestCase):
 		dbObj.message(testMsg)
 
 		# Search
-		indexList = webControl.searchForRecordsIndex(testMsg)
+		indexList = webControl.searchRecords(testMsg)
 		# Compare
 		self.assertTrue(models.messageModel.doesRecordExist(indexList[0]))

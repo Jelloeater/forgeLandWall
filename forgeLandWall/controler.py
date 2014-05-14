@@ -1,24 +1,23 @@
 import json
-from forgeLandWall.models import messageModel
+from models import messageModel
 
 import logging
+
 __author__ = 'Jesse'
 
 
-
 class dbInterface(messageModel):
-
-
 	@classmethod
-	def searchForRecordsIndex(cls, messageIn=""):
-		# FIXME Consolidate searchForRecordsIndex and searchForRecordIndex into one function
+	def searchRecords(cls, messageIn=""):
 		"""
 		Returns list of message index's matching search string
 		When left empty, returns all message indexes, can also be used to see if a message is present
 		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
+		(why should they?)
 		"""
 		dbConn, dbcursor = cls.dbConnect()
 		sqlStr = 'SELECT "index" FROM messages WHERE "message" LIKE "%' + messageIn + '%";'
+
 		indexList = None
 		try:
 			dbcursor.execute(sqlStr)
@@ -33,29 +32,7 @@ class dbInterface(messageModel):
 			logging.error("Record does not exist")
 		dbConn.close()
 		return indexList
-	@classmethod
-	def searchForRecordIndex(cls, indexIn):
-		"""
-		Returns list of message index's matching search string
-		When left empty, returns all message indexes, can also be used to see if a message is present
-		Used for updates and deletes. The user should be directly calling dbInterface.searchMessageFromDB
-		"""
-		dbConn, dbcursor = cls.dbConnect()
-		sqlStr = 'SELECT "index" FROM messages WHERE "index"=  + indexIn + ;'
-		indexList = None
-		try:
-			dbcursor.execute(sqlStr)
-			indexList = dbcursor.fetch()
-			listOut = []
-			for x in indexList:
-				listOut.append(x[0])
-			indexList = listOut
-			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
-			logging.debug("Looked up record")
-		except TypeError:
-			logging.error("Record does not exist")
-		dbConn.close()
-		return indexList
+
 
 	@classmethod
 	def getBottomIndexes(cls, numberOfBottomIndexesToGet=1):
@@ -80,7 +57,7 @@ class dbInterface(messageModel):
 		"""
 		msgList = []
 		if numberToGet == 0:
-			indexList = cls.searchForRecordsIndex("")
+			indexList = cls.searchRecords("")
 			for index in indexList:
 				index = str(index)
 				index = index.strip('(),')
@@ -125,6 +102,7 @@ class dbInterface(messageModel):
 
 	@classmethod
 	def searchMessagesFromDB(cls, messageIn=None):
+		# TODO Remove this, it's sill and we have better code to do the same thing
 		"""
 		Searches the database and return a list of message pairs in list form
 		This is a raw text search, it is NOT for altering anything, it's just so the user can get
@@ -168,33 +146,30 @@ class webControl(dbInterface):
 	"""
 
 	@classmethod
-	def getJSONmsgs(cls, numberToGet=1):
-		return cls.getMessagesFromDBasJSONObjectArray(numberToGet)
-
-
-	@classmethod
 	def searchForMessagesJSON(cls, msgToSearchFor):
 		""" Takes message string and returns JSON object"""
+		# TODO Write unit tests to cover this
 		logging.debug('Looking up: ' + msgToSearchFor)
-		indexList = cls.searchForRecordsIndex(msgToSearchFor)
+		indexList = cls.searchRecords(msgToSearchFor)
 		jsonString = []
 		jsonString.append("[")
 		for x in indexList:
 			jsonString.append(cls.getMessageAsJSONObject(x))
 			jsonString.append(",")
 
-		jsonString.pop() # Remove the extra comma introduced in the for loop
+		jsonString.pop()  # Remove the extra comma introduced in the for loop
 		logging.debug('Got message')
 		jsonString.append(']')
 		return ''.join(jsonString)
 
 	@classmethod
 	def postControl(cls, requestBody):
+		# TODO Write unit tests to cover this
 		"""Splits POST request and sends to correct method"""
 		# requestBody = POST Message
 		logging.debug('postControl')
 
-		requestList = str.split(requestBody,'=')
+		requestList = str.split(requestBody, '=')
 		action = requestList[0]
 
 		data = requestList[1]

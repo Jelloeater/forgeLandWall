@@ -1,7 +1,7 @@
 from wsgiref.simple_server import make_server
-import forgeLandWall.settings as settings
-import forgeLandWall.dbSetup as dbSetup
-import forgeLandWall.views as views
+import settings as settings
+import dbSetup as dbSetup
+import views as views
 import logging
 
 logging.basicConfig(format="[%(asctime)s] [%(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)",

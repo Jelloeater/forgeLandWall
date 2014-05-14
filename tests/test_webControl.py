@@ -26,16 +26,18 @@ class TestWebControl(TestCase):
 		print("TEST TEARDOWN")
 
 	def test_searchForRecordsIndex(self):
+		# ONLY TESTS FOR EMPTY LIST (we need a better test)
+		# TODO Write a better test (see webControl TODO's)
 		# Create message
 		dbObj = models.messageModel()
 		dbObj.message(constants.messageStr)
 
 		# Search for index
-		indexList = webControl.searchForRecordsIndex(constants.messageStr)
+		indexList = webControl.searchRecords(constants.messageStr)
 		dbObj2 = models.messageModel(index=indexList[0])
 		testStr = dbObj2.message()
 
 		self.assertEqual(constants.messageStr,testStr)
 
-		indexList = webControl.searchForRecordsIndex('headheadheadheadheadheadhead')
+		indexList = webControl.searchRecords('headheadheadheadheadheadhead')
 		self.assertFalse(indexList)

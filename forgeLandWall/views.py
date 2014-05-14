@@ -1,11 +1,9 @@
 import datetime
-from forgeLandWall.controler import webControl
-from forgeLandWall.models import messageModel
-
+from controler import webControl
+from models import messageModel
+import logging
 
 __author__ = 'Jesse'
-
-import logging
 
 
 class JSON(webControl):
@@ -23,7 +21,7 @@ class JSON(webControl):
 		# MAIN PROCESSING HERE!
 		numberToGet = int(path[2])
 		logging.debug('Number To Get:' + str(numberToGet))
-		output.append(cls.getJSONmsgs(numberToGet))  # Calls controller
+		output.append(cls.getMessagesFromDBasJSONObjectArray(numberToGet))  # Calls controller
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
@@ -104,6 +102,8 @@ class JSON(webControl):
 class HTMLHelper(webControl):
 	@staticmethod
 	def getHeader():
+		# TODO Add search function (dbinterface.searchRecords should help)
+		# Might need to generate separate page to handle request?
 		output = ['<pre>']
 		output.append("ForgeLand Message Board: ")
 		output.append(' <a href="/">View/Create</a>')
