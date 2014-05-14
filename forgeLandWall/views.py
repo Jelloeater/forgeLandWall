@@ -25,7 +25,7 @@ class JSON(webControl):
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 		yield ''.join(output)
 
@@ -46,7 +46,7 @@ class JSON(webControl):
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 		yield ''.join(output)
 
@@ -74,7 +74,7 @@ class JSON(webControl):
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 		yield ''.join(output)
 
@@ -95,7 +95,7 @@ class JSON(webControl):
 
 		output_len = sum(len(line) for line in output)
 		status = '200 OK'
-		response_headers = [('Content-type', 'text/text'), ('Content-Length', str(output_len))]
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 		yield ''.join(output)
 

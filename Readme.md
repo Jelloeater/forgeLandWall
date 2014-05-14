@@ -9,7 +9,7 @@ This application allows a computer craft computer to submit a various commands t
 "/search/messageToSearchFor"
 "/msg/IndexOfMessageToGet"
 ###POST
-"/raw"
+"/post"
 create=newMessage
 delete=indexToDelete
 edit=newMessage&index=indexToEdit
