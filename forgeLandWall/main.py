@@ -40,18 +40,26 @@ class webHandler():
 				if path[1] == "delete":
 					return views.HTTP.GET_delete(self)
 				if path[1] == "post":  # POST Posts| /post [POST][create=x, delete=x]
-					logging.debug('POST Messages')
+					logging.debug('POST Request')
 					return views.JSON.POST_Messages(self)
 
-			if len(path) == 3 and path[1] == "search" and str(path[2]):  # GET Search Messages| /get/msgToSearchFor
-				logging.debug('GET Messages')
+			if len(path) == 3 and path[1] == "search" and str(path[2]):
+			# GET Search Messages| /get/msgToSearchFor
+				logging.debug('GET Search')
+				return views.HTTP.GET_search(self)
+
+			if len(path) == 3 and path[1] == "query" and str(path[2]):
+			# GET Search Messages| /get/msgToSearchFor
+				logging.debug('GET Query')
 				return views.JSON.getMessagesSearch(self)
 
-			if len(path) == 3 and path[1] == "get" and path[2].isdigit():  # GET Messages| /get/10
+			if len(path) == 3 and path[1] == "get" and path[2].isdigit():
+			# GET Messages| /get/10
 				logging.debug('GET Messages')
 				return views.JSON.getMessages(self)
 
-			if len(path) == 3 and path[1] == "msg" and path[2].isdigit():  # GET Message| /msg/234
+			if len(path) == 3 and path[1] == "msg" and path[2].isdigit():
+			# GET Message| /msg/234
 				logging.debug('GET Single Message')
 				return views.JSON.getMessage(self)
 

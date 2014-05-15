@@ -124,6 +124,11 @@ class HTMLHelper(webControl):
 			              '<input type="submit"></form>')
 		if formType == "delete":
 			output.append('<form method="post">Delete(index)<input type="text" name="delete"><input type="submit"></form>')
+
+		if formType == "search":
+			output.append('<form method="get">'
+			              'Create<input type="text" name="search">'
+			              '<input type="submit"></form>')
 		return output
 
 	@classmethod
@@ -252,3 +257,33 @@ class HTTP(HTMLHelper):
 		response_headers = [('Content-type', 'text/plain')]
 		self.start(status, response_headers)
 		yield "Not Found\n"
+
+	@classmethod
+	def GET_search(cls, self):
+		""" HTML for create new message view + POST controller"""
+		output = HTMLHelper.getHeader()
+
+		output = HTMLHelper.getForm("search", output)
+
+		# output = HTMLHelper.getMessagesTable(output)
+		# command=create&input=someTextHere
+		# If we detect input, do this
+		if self.environ['REQUEST_METHOD'] == 'GET':
+			try:
+				request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
+			except ValueError:
+				request_body_size = 0
+
+			request_body = self.environ['wsgi.input'].read(request_body_size)
+			# TODO Write query call, (take query, return HTML table
+			output.append(request_body)
+
+		output = HTMLHelper.getFooter(output)
+
+		output = ''.join(output)
+
+		output_len = sum(len(line) for line in output)
+		status = '200 OK'
+		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
+		self.start(status, response_headers)
+		yield ''.join(output)

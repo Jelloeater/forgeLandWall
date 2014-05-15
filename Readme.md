@@ -6,7 +6,7 @@ This application allows a computer craft computer to submit a various commands t
 ## API
 ###GET
 "/get/numberOfPostsToGetAsJSON"
-"/search/messageToSearchFor"
+"/query/messageToSearchFor"
 "/msg/IndexOfMessageToGet"
 ###POST
 "/post"
