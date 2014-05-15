@@ -42,11 +42,9 @@ class webHandler():
 				if path[1] == "post":  # POST Posts| /post [POST][create=x, delete=x]
 					logging.debug('POST Request')
 					return views.JSON.POST_Messages(self)
+				if path[1] == "search":
+					return views.HTTP.GET_search(self)
 
-			if len(path) == 3 and path[1] == "search" and str(path[2]):
-			# GET Search Messages| /get/msgToSearchFor
-				logging.debug('GET Search')
-				return views.HTTP.GET_search(self)
 
 			if len(path) == 3 and path[1] == "query" and str(path[2]):
 			# GET Search Messages| /get/msgToSearchFor

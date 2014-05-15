@@ -106,29 +106,33 @@ class HTMLHelper(webControl):
 		# Might need to generate separate page to handle request?
 		output = ['<pre>']
 		output.append("ForgeLand Message Board: ")
-		output.append(' <a href="/">View/Create</a>')
+		output.append(' <a href="/">Create</a>')
 		output.append(' <a href="/edit">Edit</a>')
-		output.append(' <a href="/delete">Delete</a> <hr>')
+		output.append(' <a href="/delete">Delete</a>')
+		output.append(' <a href="/search">Search</a>')
+		output.append('<hr>')
 		return output
 
 	@staticmethod
 	def getForm(formType, output):
 		if formType == "create":
 			output.append('<form method="post">'
-			              'Create<input type="text" name="create">'
-			              '<input type="submit"></form>')
+			              '<input type="text" name="create" value="Message">'
+			              '<input type="submit" value="Create"></form>')
 		if formType == "edit":
 			output.append('<form method="post">'
-			              'Edit<input type="text" name="edit">'
-			              'Index<input type="text" name="index">'
-			              '<input type="submit"></form>')
+			              '<input type="text" name="edit" value="New message">'
+			              '<input type="text" name="index" value="Index">'
+			              '<input type="submit" value="Edit"></form>')
 		if formType == "delete":
-			output.append('<form method="post">Delete(index)<input type="text" name="delete"><input type="submit"></form>')
+			output.append('<form method="post">'
+			              '<input type="text" name="delete" value="Index">'
+			              '<input type="submit" value="Delete"></form>')
 
 		if formType == "search":
 			output.append('<form method="get">'
-			              'Create<input type="text" name="search">'
-			              '<input type="submit"></form>')
+			              '<input type="text" name="q">'
+			              '<input type="submit" value="Search"></form>')
 		return output
 
 	@classmethod
@@ -251,32 +255,25 @@ class HTTP(HTMLHelper):
 		self.start(status, response_headers)
 		yield ''.join(output)
 
-	@staticmethod
-	def notFound(self):
-		status = '404 Not Found'
-		response_headers = [('Content-type', 'text/plain')]
-		self.start(status, response_headers)
-		yield "Not Found\n"
-
 	@classmethod
 	def GET_search(cls, self):
 		""" HTML for create new message view + POST controller"""
 		output = HTMLHelper.getHeader()
 
-		output = HTMLHelper.getForm("search", output)
+		output = HTMLHelper.getForm('search', output)
 
-		# output = HTMLHelper.getMessagesTable(output)
-		# command=create&input=someTextHere
-		# If we detect input, do this
 		if self.environ['REQUEST_METHOD'] == 'GET':
-			try:
-				request_body_size = int(self.environ.get('CONTENT_LENGTH', 0))
-			except ValueError:
-				request_body_size = 0
-
-			request_body = self.environ['wsgi.input'].read(request_body_size)
-			# TODO Write query call, (take query, return HTML table
-			output.append(request_body)
+			query = str(self.environ['QUERY_STRING'])
+			if query.find('=') is not -1:
+				query = query.split('=')
+				search = query[1]
+				if search == "":
+					output = HTMLHelper.getMessagesTable(output)
+				else:
+					output.append('Searching for: ' + query[1])
+					# FIXME Do something with query
+			else:
+				output = HTMLHelper.getMessagesTable(output)
 
 		output = HTMLHelper.getFooter(output)
 
@@ -287,3 +284,10 @@ class HTTP(HTMLHelper):
 		response_headers = [('Content-type', 'text/html'), ('Content-Length', str(output_len))]
 		self.start(status, response_headers)
 		yield ''.join(output)
+
+	@staticmethod
+	def notFound(self):
+		status = '404 Not Found'
+		response_headers = [('Content-type', 'text/plain')]
+		self.start(status, response_headers)
+		yield "Not Found\n"
