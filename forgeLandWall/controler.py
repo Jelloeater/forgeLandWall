@@ -50,6 +50,7 @@ class dbInterface(messageModel):
 
 	@classmethod
 	def getMessagesFromDB(cls, numberToGet=0):
+		#TODO Combine with getMessagesFromDBsearch
 		"""	Returns list of messages as instances of messageModel
 		@param numberToGet Number of db records to return
 		@return: msgList
@@ -71,6 +72,20 @@ class dbInterface(messageModel):
 				index = index.strip('(),')
 				msg = messageModel(index)
 				msgList.append(msg)
+
+		return msgList
+
+	@classmethod
+	def getMessagesFromDBsearch(cls, search):
+		"""	Returns list of messages as instances of messageModel from search"""
+		msgList = []
+
+		indexList = cls.searchRecords(search)
+		for index in indexList:
+			index = str(index)
+			index = index.strip('(),')
+			msg = messageModel(index)
+			msgList.append(msg)
 
 		return msgList
 

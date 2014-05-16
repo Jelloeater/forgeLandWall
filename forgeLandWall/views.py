@@ -2,7 +2,6 @@ import datetime
 from controler import webControl
 from models import messageModel
 import logging
-
 __author__ = 'Jesse'
 
 
@@ -136,15 +135,19 @@ class HTMLHelper(webControl):
 		return output
 
 	@classmethod
-	def getMessagesTable(cls, output):
+	def getMessagesTable(cls, output, search=None):
 		""" Adds all messages to the HTML output for display"""
 		logging.debug("Getting messages")
-		# TODO Should move this code to the controller? (It's really short though -_-)
+		# TODO Should move this code to the controller! (It's really short though -_-)
 
 		output.append("<table><tr><th>Message</th><th>Timestamp</th><th>Index</th></tr>")
 
-		msgList = cls.getMessagesFromDB()
-		for x in msgList:
+		if search is None:
+			indexList = cls.getMessagesFromDB()
+		else:
+			indexList = cls.getMessagesFromDBsearch(search)
+
+		for x in indexList:
 			message = str(messageModel.message(x))  # Fields stored as unicode, just to make life hard -_-
 			timeStamp = str(messageModel.getTimestamp(x))
 			msgIndex = str(messageModel.getIndex(x))
@@ -270,8 +273,8 @@ class HTTP(HTMLHelper):
 				if search == "":
 					output = HTMLHelper.getMessagesTable(output)
 				else:
-					output.append('Searching for: ' + query[1])
-					# FIXME Do something with query
+					output.append('Searching for: ' + search)
+					output = HTMLHelper.getMessagesTable(output, search)
 			else:
 				output = HTMLHelper.getMessagesTable(output)
 
