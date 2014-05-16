@@ -5,7 +5,7 @@ import views as views
 import logging
 
 logging.basicConfig(format="[%(asctime)s] [%(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)",
-					level=logging.DEBUG)
+					level=logging.INFO)
 
 __author__ = 'Jesse'
 
@@ -28,7 +28,7 @@ class webHandler():
 
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
-		logging.info('Accessing' + path)
+		logging.debug('Accessing' + path)
 
 		if path is not "/":
 			path = path.split('/')

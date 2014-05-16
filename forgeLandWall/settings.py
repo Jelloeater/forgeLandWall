@@ -1,6 +1,6 @@
 import argparse
 
-from forgeLandWall import networkInfo
+import networkInfo
 
 
 __author__ = 'Jesse Laptop'

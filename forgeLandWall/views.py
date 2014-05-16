@@ -103,7 +103,8 @@ class HTMLHelper(webControl):
 	def getHeader():
 		# TODO Add search function (dbinterface.searchRecords should help)
 		# Might need to generate separate page to handle request?
-		output = ['<pre>']
+		output = []
+		output.append('<pre>')
 		output.append("ForgeLand Message Board: ")
 		output.append(' <a href="/">Create</a>')
 		output.append(' <a href="/edit">Edit</a>')
@@ -117,7 +118,7 @@ class HTMLHelper(webControl):
 		if formType == "create":
 			output.append('<form method="post">'
 			              '<input type="text" name="create" value="Message">'
-			              '<input type="submit" value="Create"></form>')
+			              '<input type="submit" value="Create" onclick="reloadPage()"></form>')
 		if formType == "edit":
 			output.append('<form method="post">'
 			              '<input type="text" name="edit" value="New message">'

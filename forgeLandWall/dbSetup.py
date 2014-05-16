@@ -1,5 +1,5 @@
 import os
-from forgeLandWall.dbConnManage import dbConnManage as dbConnection
+from dbConnManage import dbConnManage as dbConnection
 import logging
 from settings import globalVars
 

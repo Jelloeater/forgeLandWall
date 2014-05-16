@@ -1,5 +1,5 @@
 import datetime
-from forgeLandWall.dbConnManage import dbConnManage
+from dbConnManage import dbConnManage
 import logging
 
 __author__ = 'Jesse'
