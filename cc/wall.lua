@@ -21,13 +21,16 @@ terminalWidth, terminalHeight = term.getSize()
 settings = {}  -- the table representing the class, holds all the data, we don't need a singleton because THIS IS LUA.
 settings.serverURL = 'http://192.168.1.120:9000'
 settings.numberOfMessagesToGet = 15
+settings.refreshInterval = 60
+
+
 settings.monitorDefaultColor = colors.white
 settings.terminalDefaultColor = colors.white
 settings.progressBarColor = colors.yellow
 settings.bootLoaderColor = colors.green
 
 settings.statusIndent = 22 -- Indent for Status (28 for 1x2 22 for 2x4 and bigger)
-settings.terminalIndent1 = 7 -- Determines dash location
+settings.terminalIndent1 = 6 -- Determines dash location
 settings.terminalIndent2 = 36 -- Determines (On/Off ... etc location)
 settings.terminalHeaderOffset = 0
 settings.monitorHeader = "Message List"
@@ -37,6 +40,9 @@ function listSettings( ... ) -- Need two print commands due to formating
 	term.clear()
 	print("Settings - I hope you know what you're doing -_-")
 	print("")
+	term.write("serverURL = ") print(settings.serverURL)
+	term.write("numberOfMessagesToGet = ") print(settings.numberOfMessagesToGet)
+	term.write("refreshInterval = ") print(settings.refreshInterval)
 	term.write("monitorDefaultColor = ") print(settings.monitorDefaultColor)
 	term.write("terminalDefaultColor = ") print(settings.terminalDefaultColor)
 	term.write("progressBarColor = ") print(settings.progressBarColor)
@@ -57,7 +63,10 @@ function editSettingsMenu( ... )
 		listSettings()
 		term.setCursorPos(1,terminalHeight)	term.write("(setting name / eXit): ")
 		local menuChoice = read()
-		
+
+		if menuChoice == "serverURL" then settings.serverURL = read() end
+		if menuChoice == "numberOfMessagesToGet" then settings.numberOfMessagesToGet = tonumber(read()) end
+		if menuChoice == "refreshInterval" then settings.refreshInterval = tonumber(read()) end
 		if menuChoice == "monitorDefaultColor" then colorFuncs.listColors() settings.monitorDefaultColor = colorFuncs.toColor(read()) end
 		if menuChoice == "terminalDefaultColor" then colorFuncs.listColors() settings.terminalDefaultColor = colorFuncs.toColor(read()) end
 		if menuChoice == "progressBarColor" then colorFuncs.listColors() settings.progressBarColor = colorFuncs.toColor(read()) end
@@ -122,17 +131,18 @@ function Message.terminalWrite(self, lineNumberIn ) -- Runs first
 end
 
 function Message.monitorStatus(self,lineNumberIn ) -- Runs second if monitor is available
-	monitor.setCursorPos(1, lineNumberIn)
-	monitor.write(self.label)
+	monitor.setCursorPos(1,lineNumberIn+settings.terminalHeaderOffset)
 	
+	monitor.write(tostring(self.index))
+	monitor.setCursorPos(settings.terminalIndent1,lineNumberIn+settings.terminalHeaderOffset)
+	monitor.write("- ")
+	monitor.write(self.message) 
 
-	if self.status == "OFFLINE" then monitor.setTextColor(settings.offColor) end
-	if self.status == "ONLINE" then monitor.setTextColor(settings.onColor) end
-	if self.status == "MISSING" then monitor.setTextColor(settings.missingColor) end
+	local timestampText = "("..self.timestamp..")"
+	local timestampLength = string.len(timestampText)
 
-	monitor.setCursorPos(settings.statusIndent, lineNumberIn)
-	monitor.write(self.status)
-	monitor.setTextColor(settings.monitorDefaultColor)
+	monitor.setCursorPos(terminalWidth - timestampLength, lineNumberIn+settings.terminalHeaderOffset)
+	monitor.write(timestampText)
 end
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -374,6 +384,15 @@ function searchMessagesMenu( ... )
 	searchMessagesMenuFlag = false
 	mainProgram()
 end
+
+function autoRefresh( ... )
+	while true do
+		getMessages(settings.numberOfMessagesToGet)
+		termRedraw() -- PASSIVE OUTPUT
+		if monitorPresentFlag then  monitorRedraw() end -- PASSIVE OUTPUT
+		os.sleep(10)
+	end
+end
 -----------------------------------------------------------------------------------------------------------------------
 -- Main Program
 function run( ... )
@@ -382,19 +401,17 @@ function run( ... )
 end
 
 function mainProgram( ... )
-getMessages(settings.numberOfMessagesToGet)
-	while true do
 
+	while true do
+		getMessages(settings.numberOfMessagesToGet)
 		if searchMessagesMenuFlag then searchMessagesMenu() break end -- Kicks in from menuInput command
 		if editSettingsMenuFlag then editSettingsMenu() break end -- Kicks in from menuInput command
 
 		terminalWidth, terminalHeight = term.getSize() -- Incase of resize
 
-		
-
 		termRedraw() -- PASSIVE OUTPUT
 		if monitorPresentFlag then  monitorRedraw() end -- PASSIVE OUTPUT
-		parallel.waitForAny(menuInput,clickTerminal,clickMonitor)
+		parallel.waitForAny(menuInput,clickTerminal,clickMonitor,autoRefresh)
 	end
 end
 
