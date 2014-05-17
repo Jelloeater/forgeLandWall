@@ -3,6 +3,8 @@
 
 This application allows a computer craft computer to submit a various commands to interact with a web server, generating a text via a SQLLite database... It's a task / message list.
 
+FYI the computercaft client is located in the /cc directory
+
 ## API
 ###GET
 "/get/numberOfPostsToGetAsJSON"
