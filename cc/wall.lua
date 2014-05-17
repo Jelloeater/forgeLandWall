@@ -1,12 +1,5 @@
--- ###GET
--- "/get/numberOfPostsToGetAsJSON"
--- "/query/messageToSearchFor"
--- "/msg/IndexOfMessageToGet"
--- ###POST
--- "/post"
--- create=newMessage
--- delete=indexToDelete
--- edit=newMessage&index=indexToEdit
+-- Message Wall Client v1
+-- Author: Jesse
 
 os.loadAPI('jsonV2')
 os.loadAPI("colorFuncs")
@@ -15,7 +8,6 @@ searchMessagesMenuFlag = false
 editSettingsMenuFlag = false
 settingsFilePath = "/devconfig/settings.cfg"
 terminalWidth, terminalHeight = term.getSize()
-
 
 -----------------------------------------------------------------------------------------------------------------------
 -- Settings Class
@@ -52,7 +44,6 @@ function listSettings( ... ) -- Need two print commands due to formating
 	term.write("terminalHeaderOffset = ") print(settings.terminalHeaderOffset)
 	term.write("monitorHeader = ") print(settings.monitorHeader)
 	term.write("terminalHeader = ") print(settings.terminalHeader)
-
 end
 
 function editSettingsMenu( ... )
@@ -75,8 +66,6 @@ function editSettingsMenu( ... )
 		if menuChoice == "terminalHeaderOffset" then settings.terminalHeaderOffset = tonumber(read()) end
 		if menuChoice == "monitorHeader" then settings.monitorHeader = read() end
 		if menuChoice == "terminalHeader" then settings.terminalHeader = read() end
-
-
 		if menuChoice == "exit" or menuChoice == "x" then break end
 	end 
 
@@ -375,7 +364,6 @@ function searchMessagesMenu( ... )
 		end
 		
 		local menuChoice = read()
-		
 		if menuChoice == "exit" or menuChoice == "x" then 
 			break 
 		else
