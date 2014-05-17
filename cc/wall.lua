@@ -16,10 +16,11 @@ editSettingsMenuFlag = false
 settingsFilePath = "/devconfig/settings.cfg"
 terminalWidth, terminalHeight = term.getSize()
 
+
 -----------------------------------------------------------------------------------------------------------------------
 -- Settings Class
 settings = {}  -- the table representing the class, holds all the data, we don't need a singleton because THIS IS LUA.
-settings.serverURL = 'http://192.168.1.120:9000'
+settings.serverURL = ''
 settings.numberOfMessagesToGet = 15
 settings.refreshInterval = 60
 
@@ -31,7 +32,6 @@ settings.bootLoaderColor = colors.green
 
 settings.statusIndent = 22 -- Indent for Status (28 for 1x2 22 for 2x4 and bigger)
 settings.terminalIndent1 = 6 -- Determines dash location
-settings.terminalIndent2 = 36 -- Determines (On/Off ... etc location)
 settings.terminalHeaderOffset = 0
 settings.monitorHeader = "Message List"
 settings.terminalHeader = "Message List"
@@ -49,7 +49,6 @@ function listSettings( ... ) -- Need two print commands due to formating
 	term.write("bootLoaderColor = ") print(settings.bootLoaderColor)
 	term.write("statusIndent = ") print(settings.statusIndent)
 	term.write("terminalIndent1 = ") print(settings.terminalIndent1)
-	term.write("terminalIndent2 = ") print(settings.terminalIndent2)
 	term.write("terminalHeaderOffset = ") print(settings.terminalHeaderOffset)
 	term.write("monitorHeader = ") print(settings.monitorHeader)
 	term.write("terminalHeader = ") print(settings.terminalHeader)
@@ -73,7 +72,6 @@ function editSettingsMenu( ... )
 		if menuChoice == "bootLoaderColor" then colorFuncs.listColors() settings.bootLoaderColor = colorFuncs.toColor(read()) end
 		if menuChoice == "statusIndent" then settings.statusIndent = tonumber(read()) end
 		if menuChoice == "terminalIndent1" then settings.terminalIndent1 = tonumber(read()) end
-		if menuChoice == "terminalIndent2" then settings.terminalIndent2 = tonumber(read()) end
 		if menuChoice == "terminalHeaderOffset" then settings.terminalHeaderOffset = tonumber(read()) end
 		if menuChoice == "monitorHeader" then settings.monitorHeader = read() end
 		if menuChoice == "terminalHeader" then settings.terminalHeader = read() end
@@ -140,8 +138,8 @@ function Message.monitorStatus(self,lineNumberIn ) -- Runs second if monitor is 
 
 	local timestampText = "("..self.timestamp..")"
 	local timestampLength = string.len(timestampText)
-
-	monitor.setCursorPos(terminalWidth - timestampLength, lineNumberIn+settings.terminalHeaderOffset)
+	local x, y = monitor.getSize()
+	monitor.setCursorPos(x - timestampLength, lineNumberIn+settings.terminalHeaderOffset)
 	monitor.write(timestampText)
 end
 
@@ -201,7 +199,16 @@ end
 
 function bootLoader( ... )
 	term.clear()
-	if fs.exists (settingsFilePath) then loadSettings() end -- Loads settings
+	if fs.exists (settingsFilePath) then loadSettings() 
+	else
+		print('Enter IP Address (Ex 127.0.0.1)')
+		ipaddress = read()
+		print('Enter port (Ex 80)')
+		port = read()
+		settings.serverURL = 'http://'..ipaddress..':'..port
+		saveSettings()
+	end 
+	-- Loads settings
 	term.setTextColor(settings.bootLoaderColor)
 
 	term.setCursorPos(1,1)
@@ -390,7 +397,7 @@ function autoRefresh( ... )
 		getMessages(settings.numberOfMessagesToGet)
 		termRedraw() -- PASSIVE OUTPUT
 		if monitorPresentFlag then  monitorRedraw() end -- PASSIVE OUTPUT
-		os.sleep(10)
+		os.sleep(settings.refreshInterval)
 	end
 end
 -----------------------------------------------------------------------------------------------------------------------
