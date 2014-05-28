@@ -80,7 +80,14 @@ class messageModel(dbConnManage):
 
 	@staticmethod
 	def __getTimeStampFromSystem():
-		return datetime.datetime.now().replace(microsecond=0)
+		ts = datetime.datetime.now().replace(microsecond=0)
+		mo = str(ts.month)
+		d = str(ts.day)
+		h = str(ts.hour)
+		m = str(ts.minute)
+		out = str(mo + '-' + d + ' ' + h + ':' + m)
+		logging.critical(out)
+		return out
 
 	@classmethod
 	def doesRecordExist(cls, indexIn):
