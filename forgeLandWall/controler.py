@@ -1,4 +1,5 @@
 import json
+import urllib2
 from models import messageModel
 
 import logging
@@ -187,13 +188,10 @@ class webControl(dbInterface):
 		requestList = str.split(requestBody, '=')
 		action = requestList[0]
 
-		data = requestList[1]
-		logging.debug('Action: ' + action + ' Data: ' + data)
-		data = str.replace(data, '+', ' ')  # Adds proper space to message
-		if not str.isspace(data) and data != "":
-			logging.debug(data)
-			# FIXME Convert from unicode to ANSI chars
+		data = urllib2.unquote(requestList[1])  # Fixes url string encoding issues (Ex %21)
+		# logging.debug('Action: ' + action + ' Data: ' + data)
 
+		if not str.isspace(data) and data != "":
 			if action == 'create':
 				return cls.createRecord(data)
 			if action == 'delete':
@@ -223,3 +221,4 @@ class webControl(dbInterface):
 		x = messageModel(index=index)
 		x.deleteRecord()
 		pass
+
