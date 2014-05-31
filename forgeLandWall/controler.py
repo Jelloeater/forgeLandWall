@@ -27,7 +27,7 @@ class dbInterface(messageModel):
 				listOut.append(x[0])
 			indexList = listOut
 			# indexList = [x[0] for x in indexList] #  Same thing as above, list comprehension
-			logging.debug("Looked up record")
+			# logging.debug("Looked up record")
 		except TypeError:
 			logging.error("Record does not exist")
 		dbConn.close()

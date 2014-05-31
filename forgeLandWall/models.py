@@ -19,7 +19,7 @@ class messageModel(dbConnManage):
 			# Index should be used for edits and delete though
 			self.__index = index
 			self.__lookupRecordFromIndex()
-			logging.debug("Lookup Record (init)")
+			# logging.debug("Lookup Record (init)")
 
 	def message(self, message=None):
 		"""Gets message from object, or writes message to DB"""
@@ -45,7 +45,7 @@ class messageModel(dbConnManage):
 			self.__messageTxt = record[0]
 			self.__timestamp = record[1]
 			self.__index = record[2]
-			logging.debug("Looked up record")
+			# logging.debug("Looked up record")
 		except TypeError:
 			self.__messageTxt = "CANNOT FIND MESSAGE @ INDEX" + str(self.__index)
 			self.__timestamp = ""

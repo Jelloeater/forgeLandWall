@@ -11,7 +11,7 @@ class dbConnManage():
 	def dbConnect():
 		""" Connects to Database
 		@return: dbConn, dbCur"""
-		logging.debug("Connection Opened")
+		# logging.debug("Connection Opened")
 		dbConn = sqlite3.connect(globalVars.dbPath)
 		dbCur = dbConn.cursor()
 
@@ -24,4 +24,4 @@ class dbConnManage():
 		"""
 		dbConn.commit()
 		dbConn.close()
-		logging.debug("Connection Closed")
+		# logging.debug("Connection Closed")
