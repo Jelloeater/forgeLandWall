@@ -294,4 +294,4 @@ class HTTP(HTMLHelper):
 		status = '404 Not Found'
 		response_headers = [('Content-type', 'text/plain')]
 		self.start(status, response_headers)
-		yield "Not Found\n"
+		yield "Not Found"
