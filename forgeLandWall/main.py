@@ -4,8 +4,6 @@ import dbSetup as dbSetup
 import views as views
 import logging
 
-logging.basicConfig(format="[%(asctime)s] [%(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)",
-					level=logging.INFO)
 
 __author__ = 'Jesse'
 

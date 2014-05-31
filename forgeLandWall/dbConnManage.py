@@ -6,6 +6,7 @@ __author__ = 'Jesse Laptop'
 
 
 class dbConnManage():
+	logging.basicConfig(format="[%(asctime)s] [%(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)", level=logging.DEBUG)
 	@staticmethod
 	def dbConnect():
 		""" Connects to Database
