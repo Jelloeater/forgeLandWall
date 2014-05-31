@@ -188,7 +188,7 @@ class webControl(dbInterface):
 		requestList = str.split(requestBody, '=')
 		action = requestList[0]
 
-		data = urllib2.unquote(requestList[1])  # Fixes url string encoding issues (Ex %21)
+		data = requestList[1]  # Fixes url string encoding issues (Ex %21)
 		# logging.debug('Action: ' + action + ' Data: ' + data)
 
 		if not str.isspace(data) and data != "":
@@ -202,19 +202,19 @@ class webControl(dbInterface):
 				# index=someNumber&edit=someMessage (no control for this)
 				indexIn = requestList[2]
 				messageIn = requestList[1].split('&')
-				return cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0].replace("+", " "))
+				return cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0])
 
 	@classmethod
 	def createRecord(cls, messageIn=None):
 		x = messageModel()
-		x.message(message=messageIn)
-		return cls.searchRecords(messageIn)
+		x.message(message=cls.cleanInput(messageIn))
+		return cls.searchRecords(cls.cleanInput(messageIn))
 
 	@classmethod
 	def updateRecords(cls, indexIn, messageIn=None):
 		x = messageModel(index=indexIn)
-		x.message(message=messageIn)
-		return cls.searchRecords(messageIn)
+		x.message(message=cls.cleanInput(messageIn))
+		return cls.searchRecords(cls.cleanInput(messageIn))
 
 	@classmethod
 	def deleteRecords(cls, index=None):
@@ -222,3 +222,8 @@ class webControl(dbInterface):
 		x.deleteRecord()
 		pass
 
+	@classmethod
+	def cleanInput(cls, messageIn):
+		""" Cleans up messy URL type input (Ex hi+you%21) """
+		cleanMessage = urllib2.unquote(messageIn)
+		return cleanMessage.replace("+", " ")

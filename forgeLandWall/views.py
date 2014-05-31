@@ -64,7 +64,7 @@ class JSON(webControl):
 
 		if request_body_size != 0:
 			returnValue = cls.postControl(request_body)
-			output.append('Request Received (' + str(request_body) + ') : ' + str(returnValue))
+			output.append('Request Received (' + str(cls.cleanInput(request_body)) + ') : ' + str(returnValue))
 			# FIXME Should reply with url of index for create
 		else:
 			output.append('Empty Request')
