@@ -9,9 +9,10 @@ FYI the computercaft client is located in the /cc directory
 ###GET
 "/get/numberOfPostsToGetAsJSON"
 "/query/messageToSearchFor"
+(Entry not found returns "]")
 "/msg/IndexOfMessageToGet"
 ###POST
-"/post"
+"/post" (Ex returns "Request Received (create=newMessage) : [indexesThatMatchInput]")
 create=newMessage
 delete=indexToDelete
 edit=newMessage&index=indexToEdit
