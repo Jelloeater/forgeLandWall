@@ -53,7 +53,7 @@ class JSON(webControl):
 	def POST_Messages(cls, self):
 		"""Handles all text JSON PUT requests
 		PUT should be in the format create=message, edit=index+message=newmessage, delete=index """
-		logging.debug('JSON PUTs')
+		# logging.debug('JSON PUTs')
 		output = ['']
 
 		try:

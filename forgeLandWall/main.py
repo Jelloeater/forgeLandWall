@@ -26,11 +26,11 @@ class webHandler():
 
 	def __iter__(self):
 		path = self.environ['PATH_INFO']
-		logging.debug('Accessing' + path)
+		logging.debug('Accessing ' + path)
 
 		if path is not "/":
 			path = path.split('/')
-			logging.debug('PathList: ' + str(path))
+			# logging.debug('PathList: ' + str(path))
 
 			if len(path) == 2:
 				if path[1] == "edit":
@@ -38,7 +38,7 @@ class webHandler():
 				if path[1] == "delete":
 					return views.HTTP.GET_delete(self)
 				if path[1] == "post":  # POST Posts| /post [POST][create=x, delete=x]
-					logging.debug('POST Request')
+					# logging.debug('POST Request')
 					return views.JSON.POST_Messages(self)
 				if path[1] == "search":
 					return views.HTTP.GET_search(self)

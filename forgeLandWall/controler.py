@@ -182,7 +182,7 @@ class webControl(dbInterface):
 		# TODO Write unit tests to cover this
 		"""Splits POST request and sends to correct method"""
 		# requestBody = POST Message
-		logging.debug('postControl')
+		# logging.debug('postControl')
 
 		requestList = str.split(requestBody, '=')
 		action = requestList[0]
@@ -191,6 +191,9 @@ class webControl(dbInterface):
 		logging.debug('Action: ' + action + ' Data: ' + data)
 		data = str.replace(data, '+', ' ')  # Adds proper space to message
 		if not str.isspace(data) and data != "":
+			logging.debug(data)
+			# FIXME Convert from unicode to ANSI chars
+
 			if action == 'create':
 				return cls.createRecord(data)
 			if action == 'delete':

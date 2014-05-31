@@ -86,7 +86,6 @@ class messageModel(dbConnManage):
 		h = str(ts.hour)
 		m = str(ts.minute)
 		out = str(mo + '-' + d + ' ' + h + ':' + m)
-		logging.critical(out)
 		return out
 
 	@classmethod
