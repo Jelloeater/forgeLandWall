@@ -192,27 +192,28 @@ class webControl(dbInterface):
 		data = str.replace(data, '+', ' ')  # Adds proper space to message
 		if not str.isspace(data) and data != "":
 			if action == 'create':
-				cls.createRecord(data)
+				return cls.createRecord(data)
 			if action == 'delete':
-				cls.deleteRecords(data)
+				return cls.deleteRecords(data)
 			if action == 'edit':
 				# TODO write better method for dealing with out of sequence POST messages
 				# edit=someMessage&index=someNumber (normal)
 				# index=someNumber&edit=someMessage (no control for this)
 				indexIn = requestList[2]
 				messageIn = requestList[1].split('&')
-				cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0].replace("+", " "))
+				return cls.updateRecords(indexIn=indexIn, messageIn=messageIn[0].replace("+", " "))
 
 	@classmethod
 	def createRecord(cls, messageIn=None):
 		x = messageModel()
 		x.message(message=messageIn)
+		return cls.searchRecords(messageIn)
 
 	@classmethod
 	def updateRecords(cls, indexIn, messageIn=None):
 		x = messageModel(index=indexIn)
 		x.message(message=messageIn)
-		pass
+		return cls.searchRecords(messageIn)
 
 	@classmethod
 	def deleteRecords(cls, index=None):

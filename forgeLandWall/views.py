@@ -63,8 +63,8 @@ class JSON(webControl):
 		request_body = self.environ['wsgi.input'].read(request_body_size)
 
 		if request_body_size != 0:
-			cls.postControl(request_body)
-			output.append('Request Received')
+			returnValue = cls.postControl(request_body)
+			output.append('Request Received (' + str(request_body) + ') : ' + str(returnValue))
 			# FIXME Should reply with url of index for create
 		else:
 			output.append('Empty Request')
