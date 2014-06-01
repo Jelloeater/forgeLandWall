@@ -65,7 +65,6 @@ class JSON(webControl):
 		if request_body_size != 0:
 			returnValue = cls.postControl(request_body)
 			output.append('Request Received (' + str(cls.cleanInput(request_body)) + ') : ' + str(returnValue))
-			# FIXME Should reply with url of index for create
 		else:
 			output.append('Empty Request')
 			logging.warning('Empty Request Body')
@@ -101,7 +100,6 @@ class JSON(webControl):
 class HTMLHelper(webControl):
 	@staticmethod
 	def getHeader():
-		# TODO Add search function (dbinterface.searchRecords should help)
 		# Might need to generate separate page to handle request?
 		output = []
 		output.append('<pre>')
@@ -146,7 +144,7 @@ class HTMLHelper(webControl):
 		if search is None:
 			indexList = cls.getMessagesFromDB()
 		else:
-			indexList = cls.getMessagesFromDBsearch(search)
+			indexList = cls.getMessagesFromDBSearch(search)
 
 		for x in indexList:
 			message = str(messageModel.message(x))  # Fields stored as unicode, just to make life hard -_-

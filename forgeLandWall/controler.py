@@ -51,7 +51,7 @@ class dbInterface(messageModel):
 
 	@classmethod
 	def getMessagesFromDB(cls, numberToGet=0):
-		#TODO Combine with getMessagesFromDBsearch
+		#TODO Combine with getMessagesFromDBSearch
 		"""	Returns list of messages as instances of messageModel
 		@param numberToGet Number of db records to return
 		@return: msgList
@@ -77,7 +77,7 @@ class dbInterface(messageModel):
 		return msgList
 
 	@classmethod
-	def getMessagesFromDBsearch(cls, search):
+	def getMessagesFromDBSearch(cls, search):
 		"""	Returns list of messages as instances of messageModel from search"""
 		msgList = []
 
@@ -180,7 +180,6 @@ class webControl(dbInterface):
 
 	@classmethod
 	def postControl(cls, requestBody):
-		# TODO Write unit tests to cover this
 		"""Splits POST request and sends to correct method"""
 		# requestBody = POST Message
 		# logging.debug('postControl')

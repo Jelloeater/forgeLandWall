@@ -1,3 +1,4 @@
+import json
 from unittest import TestCase
 import constants
 import models
@@ -37,7 +38,17 @@ class TestWebControl(TestCase):
 		dbObj2 = models.messageModel(index=indexList[0])
 		testStr = dbObj2.message()
 
-		self.assertEqual(constants.messageStr,testStr)
+		self.assertEqual(constants.messageStr, testStr)
 
 		indexList = webControl.searchRecords('headheadheadheadheadheadhead')
 		self.assertFalse(indexList)
+
+	def test_searchForMessagesJSON(self):
+		dbObj = models.messageModel()
+		dbObj.message(constants.messageStr)
+
+		rawJSON = webControl.searchForMessagesJSON(constants.messageStr)
+		jsonObj = json.loads(rawJSON)
+		jsonTest = jsonObj[0]['message']
+
+		self.assertEqual(constants.messageStr, jsonTest)

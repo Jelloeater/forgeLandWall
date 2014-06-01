@@ -1,3 +1,4 @@
+import json
 import os
 from unittest import TestCase
 
@@ -8,7 +9,6 @@ __author__ = 'Jesse'
 
 
 class TestDbInterface(TestCase):
-
 	def setUp(self):
 		os.chdir("..")  # Go-to project root
 		os.chdir("forgeLandWall")
@@ -26,6 +26,7 @@ class TestDbInterface(TestCase):
 	def tearDown(self):
 		"""Delete test messages"""
 		from forgeLandWall.dbConnManage import dbConnManage
+
 		dbConn, dbcursor = dbConnManage.dbConnect()
 		messageStr = "json"
 		sqlStr = 'DELETE FROM messages WHERE "message" LIKE "%' + messageStr + '%";'
@@ -52,3 +53,13 @@ class TestDbInterface(TestCase):
 		x = results[2]
 
 		self.assertEqual(x[0], "json3")
+
+	def test_getMessagesFromDBSearch(self):
+		msgList = dbInterface.getMessagesFromDBSearch("json1")
+		self.assertEqual('json1', msgList[0].message())
+
+	def test_getMessageAsJSONObject(self):
+		msgIndexList = dbInterface.searchRecords("json1")
+		singleMessageRawJSON = dbInterface.getMessageAsJSONObject(msgIndexList[0])
+		jsonObj = json.loads(singleMessageRawJSON)
+		self.assertEqual(jsonObj['message'], "json1")
