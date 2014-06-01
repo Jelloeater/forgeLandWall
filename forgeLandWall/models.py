@@ -83,8 +83,16 @@ class messageModel(dbConnManage):
 		ts = datetime.datetime.now().replace(microsecond=0)
 		mo = str(ts.month)
 		d = str(ts.day)
-		h = str(ts.hour)
-		m = str(ts.minute)
+		if ts.hour < 10:
+			h = '0' + str(ts.hour)
+		else:
+			h = str(ts.hour)
+
+		if ts.minute < 10:
+			m = '0' + str(ts.minute)
+		else:
+			m = str(ts.minute)
+
 		out = str(mo + '-' + d + ' ' + h + ':' + m)
 		return out
 
