@@ -1,3 +1,11 @@
+#!/usr/bin/env python2.7
+"""
+About:
+A simple WSGI API server, aka take table from SQLite and make web page and API.
+"""
+__author__ = "Jesse Schoepfer"
+__license__ = "GNU GPL v3.0"
+
 from wsgiref.simple_server import make_server
 import settings as settings
 import dbSetup as dbSetup
